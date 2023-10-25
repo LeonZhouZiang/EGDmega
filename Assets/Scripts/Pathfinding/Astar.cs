@@ -8,9 +8,14 @@ public class Astar : MonoBehaviour
 
     public Node startNode;
     public Node targetNode;
-    public Node[,] nodes;
-
+    private Node[,] nodes;
+    private Dictionary<Vector2, Node> nodesDict;
     public MapManager map;
+
+    public Node[,] Nodes { get => nodes; set => nodes = value; }
+    public Dictionary<Vector2, Node> NodesDict => nodesDict;
+
+
     private void Awake()
     {
         Instance = this;
@@ -22,14 +27,7 @@ public class Astar : MonoBehaviour
 
     public Node NodeFromPosition(Vector2 position)
     {
-        foreach (var node in nodes)
-        {
-            if (node.position == position)
-            {
-                return node;
-            }
-        }
-        return null;
+        return nodesDict[position];
     }
 
     public void ResetColor()
@@ -38,7 +36,7 @@ public class Astar : MonoBehaviour
         {
             for (int j = 0; j < nodes.GetLength(1); j++)
             {
-                map.Grids[i, j].GetComponent<SpriteRenderer>().color = nodes[i, j].color;
+                map.GridsArray[i, j].GetComponent<SpriteRenderer>().color = nodes[i, j].color;
             }
         }
     }
@@ -48,14 +46,12 @@ public class Astar : MonoBehaviour
         //nodes = level.ReturnNodes();
         if (startNode != null && targetNode != null)
         {
-            StopCoroutine(nameof(FindPath));
-            StartCoroutine(nameof(FindPath));
+            FindPath();
         }
     }
 
-    IEnumerator FindPath()
+    public bool FindPath()
     {
-
         List<Node> openList = new List<Node>();
         HashSet<Node> closedList = new();
         openList.Add(startNode);
@@ -76,7 +72,7 @@ public class Astar : MonoBehaviour
             if (currentNode == targetNode)
             {
                 Retrace(startNode, targetNode);
-                StopAllCoroutines();
+                return true;
             }
 
             //find neighbors
@@ -98,13 +94,12 @@ public class Astar : MonoBehaviour
                     if (!openList.Contains(neighbor))
                     {
                         openList.Add(neighbor);
-                        map.Grids[neighbor.gridX, neighbor.gridY].GetComponent<SpriteRenderer>().color = Color.yellow;
+                        map.GridsArray[neighbor.gridX, neighbor.gridY].GetComponent<SpriteRenderer>().color = Color.yellow;
                     }
-                    yield return new WaitForSeconds(0.005f);
                 }
             }
         }
-        yield return null;
+        return false;
     }
 
     public int GetDistanceBetweenNodes(Node nodeA, Node nodeB)
@@ -127,7 +122,7 @@ public class Astar : MonoBehaviour
         }
         foreach (Node node in path)
         {
-            map.Grids[node.gridX, node.gridY].GetComponent<SpriteRenderer>().color = Color.green;
+            map.GridsArray[node.gridX, node.gridY].GetComponent<SpriteRenderer>().color = Color.green;
         }
     }
 

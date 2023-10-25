@@ -6,7 +6,7 @@ public class CombatManager : MonoBehaviour, IManager
 {
     public void PostLateUpdate()
     {
-
+         
     }
 
     public void PostUpdate()
