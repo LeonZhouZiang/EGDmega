@@ -1,12 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CombatManager : MonoBehaviour, IManager
+[System.Serializable]
+public class CombatManager : IManager
 {
-    public void PostLateUpdate()
+    public Action<int> currentCardAction;
+
+
+    public void PostAwake()
     {
-         
+
+    }
+
+    public void PreUpdate()
+    {
+
     }
 
     public void PostUpdate()
@@ -17,10 +27,15 @@ public class CombatManager : MonoBehaviour, IManager
     {
  
     }
-
-    public void PreUpdate()
+    public void PostLateUpdate()
     {
-      
+
     }
+    
+    public void WaitingForDice()
+    {
+        GameManager.Instance.diceSystem.ReceiveAction(currentCardAction);
+    }
+
 
 }

@@ -4,9 +4,11 @@ using UnityEngine;
 
 public interface IManager
 {
+    public abstract void PostAwake();
     public abstract void PreUpdate();
     public abstract void PostUpdate();
 
     public abstract void PreLateUpdate();
     public abstract void PostLateUpdate();
+
 }

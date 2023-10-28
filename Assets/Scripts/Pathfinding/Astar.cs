@@ -8,23 +8,22 @@ public class Astar : MonoBehaviour
 
     public Node startNode;
     public Node targetNode;
+
     private Node[,] nodes;
-    private Dictionary<Vector2, Node> nodesDict;
-    public MapManager map;
-
+    private Dictionary<Vector3, Node> nodesDict = new();
+    private MapManager map;
     public Node[,] Nodes { get => nodes; set => nodes = value; }
-    public Dictionary<Vector2, Node> NodesDict => nodesDict;
-
+    public Dictionary<Vector3, Node> NodesDict => nodesDict;
 
     private void Awake()
     {
         Instance = this;
     }
-    void Start()
+
+    public void Start()
     {
+        map = GameManager.Instance.mapManager;
     }
-
-
     public Node NodeFromPosition(Vector2 position)
     {
         return nodesDict[position];
@@ -41,16 +40,20 @@ public class Astar : MonoBehaviour
         }
     }
 
-    public void StartFind()
+    public Node[] TryFindPath(Vector2 startPos, Vector2 targetPos, int steps)
     {
-        //nodes = level.ReturnNodes();
+        startNode = NodeFromPosition(startPos);
+        targetNode = NodeFromPosition(targetPos);
+
         if (startNode != null && targetNode != null)
         {
-            FindPath();
+            return FindPath(steps);
         }
+        else Debug.LogError("start nodes not valid");
+            return null;
     }
 
-    public bool FindPath()
+    public Node[] FindPath(int steps)
     {
         List<Node> openList = new List<Node>();
         HashSet<Node> closedList = new();
@@ -71,8 +74,10 @@ public class Astar : MonoBehaviour
 
             if (currentNode == targetNode)
             {
-                Retrace(startNode, targetNode);
-                return true;
+                //result found check steps
+                Node[] path = Retrace(startNode, targetNode);
+                if (path.Length > steps) path = new Node[0];
+                return path;
             }
 
             //find neighbors
@@ -99,7 +104,7 @@ public class Astar : MonoBehaviour
                 }
             }
         }
-        return false;
+        return new Node[0];
     }
 
     public int GetDistanceBetweenNodes(Node nodeA, Node nodeB)
@@ -109,8 +114,7 @@ public class Astar : MonoBehaviour
         return dstX + dstY;
     }
 
-
-    private void Retrace(Node start, Node end)
+    private Node[] Retrace(Node start, Node end)
     {
         List<Node> path = new List<Node>();
         Node currentNode = end;
@@ -120,10 +124,7 @@ public class Astar : MonoBehaviour
             path.Add(currentNode);
             currentNode = currentNode.parent;
         }
-        foreach (Node node in path)
-        {
-            map.GridsArray[node.gridX, node.gridY].GetComponent<SpriteRenderer>().color = Color.green;
-        }
+        return path.ToArray();
     }
 
     public List<Node> GetNeighbors(Node node)
@@ -133,7 +134,7 @@ public class Astar : MonoBehaviour
         {
             for (int y = -1; y <= 1; y++)
             {
-                if (x == 0 && y == 0) continue;
+                if (Mathf.Abs(x) == Mathf.Abs(y)) continue;
 
                 int checkX = node.gridX + x;
                 int checkY = node.gridY + y;

@@ -1,22 +1,56 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiceSystem : MonoBehaviour
+[System.Serializable]
+public class DiceSystem : IManager
 {
-    public GameObject dice;
+    public GameObject diceObject;
     public GameObject DiceCanvas;
 
+    private Action<int> CurrentWaitingAction;
+    private Dice dice;
+    private int currentValue = 0;
 
-    public int Roll()
+    public int CurrentValue { set => currentValue = value; get => currentValue; }
+    
+    public void ConfirmRoll()
     {
-        int value = 1;
-        return value;
+        CurrentWaitingAction.Invoke(currentValue);
     }
 
     public void ShowDice()
     {
         DiceCanvas.SetActive(true);
-        dice.SetActive(true);
+        diceObject.SetActive(true);
     }
+
+    public void ReceiveAction(Action<int> action)
+    {
+        CurrentWaitingAction = action;
+    }
+
+    public void PostAwake()
+    {
+        dice = diceObject.GetComponent<Dice>();
+    }
+    public void PreUpdate()
+    {
+
+    }
+
+    public void PostUpdate()
+    {
+    }
+
+    public void PreLateUpdate()
+    {
+    }
+
+    public void PostLateUpdate()
+    {
+    }
+
+    
 }

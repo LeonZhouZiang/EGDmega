@@ -9,19 +9,22 @@ public class GameManager : MonoBehaviour
     public UIManager uiManager;
     public MouseStateManager mouseStateManager;
     public MapManager mapManager;
+    public DiceSystem diceSystem;
 
     public delegate void PreUpdates();
     public delegate void PostUpdates ();
+    public delegate void PostAwakes();
     public event PreUpdates PreUpdatesHandler;
     public event PostUpdates PostUpdatesHandler;
+    public event PostAwakes PostAwakesHandler;
 
     void Awake()
     {
         Instance = this;
-        combatManager = gameObject.GetComponent<CombatManager>();
-        uiManager = gameObject.GetComponent<UIManager>();
-        mouseStateManager = gameObject.GetComponent<MouseStateManager>();
-        mapManager = gameObject.GetComponent<MapManager>();
+        combatManager = new CombatManager();
+        uiManager = new UIManager();
+        mouseStateManager = new MouseStateManager();
+        diceSystem = new DiceSystem();
 
         PreUpdatesHandler += combatManager.PreUpdate;
         PreUpdatesHandler += uiManager.PreUpdate;
@@ -33,6 +36,12 @@ public class GameManager : MonoBehaviour
         PostUpdatesHandler += mouseStateManager.PostUpdate;
         PostUpdatesHandler += mapManager.PostUpdate;
 
+        PostAwakesHandler += combatManager.PostAwake;
+        PostAwakesHandler += uiManager.PostAwake;
+        PostAwakesHandler += mouseStateManager.PostAwake;
+        PostAwakesHandler += mapManager.PostAwake;
+
+        PostAwakesHandler.Invoke();
     }
 
     private void Start()
