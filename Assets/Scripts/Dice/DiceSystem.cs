@@ -8,6 +8,7 @@ public class DiceSystem : IManager
 {
     public GameObject diceObject;
     public GameObject DiceCanvas;
+    public Camera diceCamera;
 
     private Action<int> CurrentWaitingAction;
     private Dice dice;
@@ -15,13 +16,10 @@ public class DiceSystem : IManager
 
     public int CurrentValue { set => currentValue = value; get => currentValue; }
     
-    public void ConfirmRoll()
-    {
-        CurrentWaitingAction.Invoke(currentValue);
-    }
 
     public void ShowDice()
     {
+        diceCamera.gameObject.SetActive(true);
         DiceCanvas.SetActive(true);
         diceObject.SetActive(true);
     }
@@ -29,6 +27,13 @@ public class DiceSystem : IManager
     public void ReceiveAction(Action<int> action)
     {
         CurrentWaitingAction = action;
+    }
+    public void ConfirmRoll()
+    {
+        CurrentWaitingAction.Invoke(currentValue);
+        diceCamera.gameObject.SetActive(false);
+        DiceCanvas.SetActive(false);
+        diceObject.SetActive(false);
     }
 
     public void PostAwake()

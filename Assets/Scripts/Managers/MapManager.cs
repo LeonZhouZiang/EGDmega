@@ -22,10 +22,14 @@ public class MapManager : MonoBehaviour, IManager
     public GameObject GridMap => gridMap;
     public GameObject[,] GridsArray { get { return gridsArray; } }
 
+    public void Start()
+    {
+        GenerateMap();
+    }
     public void PostAwake()
     {
-        Debug.Log(1);
-        GenerateMap();
+
+        
     }
 
     public void PreUpdate()
