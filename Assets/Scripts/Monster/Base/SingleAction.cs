@@ -2,14 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Actions
+[System.Serializable]
+public class SingleAction
 {
-    public void Move()
-    {
-
-    }
-
-    public void Attack()
+    public string name;
+    void Move()
     {
 
     }

@@ -9,26 +9,17 @@ public class UIManager : IManager
     TextMeshProUGUI stateText;
 
     public GameObject reticle;
-    public void PostAwake()
+    public override void PostAwake()
     {
 
     }
     
-    public void PreUpdate()
+    public override void PreUpdate()
     {
 
     }
-    public void PostUpdate()
+    public override void PostUpdate()
     {
-    }
-
-    public void PreLateUpdate()
-    {
-
-    }
-    public void PostLateUpdate()
-    {
-
     }
 
 

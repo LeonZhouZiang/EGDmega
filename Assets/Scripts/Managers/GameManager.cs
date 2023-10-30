@@ -5,15 +5,18 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+
     public CombatManager combatManager;
     public UIManager uiManager;
     public MouseStateManager mouseStateManager;
     public MapManager mapManager;
     public DiceSystem diceSystem;
+    public Astar astar;
 
     public delegate void PreUpdates();
     public delegate void PostUpdates ();
     public delegate void PostAwakes();
+
     public event PreUpdates PreUpdatesHandler;
     public event PostUpdates PostUpdatesHandler;
     public event PostAwakes PostAwakesHandler;
@@ -25,6 +28,7 @@ public class GameManager : MonoBehaviour
         uiManager = new UIManager();
         mouseStateManager = new MouseStateManager();
         diceSystem = new DiceSystem();
+        astar = new Astar();
 
         PreUpdatesHandler += combatManager.PreUpdate;
         PreUpdatesHandler += uiManager.PreUpdate;

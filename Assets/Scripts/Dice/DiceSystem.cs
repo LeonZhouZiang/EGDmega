@@ -36,25 +36,9 @@ public class DiceSystem : IManager
         diceObject.SetActive(false);
     }
 
-    public void PostAwake()
+    public override void PostAwake()
     {
         dice = diceObject.GetComponent<Dice>();
-    }
-    public void PreUpdate()
-    {
-
-    }
-
-    public void PostUpdate()
-    {
-    }
-
-    public void PreLateUpdate()
-    {
-    }
-
-    public void PostLateUpdate()
-    {
     }
 
     

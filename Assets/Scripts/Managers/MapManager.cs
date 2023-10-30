@@ -1,12 +1,18 @@
 using UnityEngine;
 
 [System.Serializable]
-public class MapManager : MonoBehaviour, IManager
+public class MapManager : IManager
 {
     [SerializeField]
-    private int width;
+    private int widthCount;
     [SerializeField]
-    private int height;
+    private int heightCount;
+    [SerializeField]
+    [Range(1.0f,5.0f)]
+    private float scale;
+    [SerializeField]
+    [Range(1f, 3f)]
+    private float gridSize;
     [SerializeField]
     GameObject grid;
     [SerializeField]
@@ -22,55 +28,44 @@ public class MapManager : MonoBehaviour, IManager
     public GameObject GridMap => gridMap;
     public GameObject[,] GridsArray { get { return gridsArray; } }
 
-    public void Start()
+    public override void PostAwake()
     {
+
         GenerateMap();
     }
-    public void PostAwake()
-    {
 
-        
-    }
-
-    public void PreUpdate()
+    public override void PreUpdate()
     {
 
     }
 
-    public void PostUpdate()
+    public override void PostUpdate()
     {
         
     }
 
-
-    public void PostLateUpdate()
-    {
-        
-    }
-    public void PreLateUpdate()
-    {
-    }
 
     //generate map
     public void GenerateMap()
     {
         gridMap = new GameObject("GridMap");
-        gridsArray = new GameObject[width, height];
-        Astar.Instance.Nodes = new Node[height, width];
+        gridsArray = new GameObject[widthCount, heightCount];
+        GameManager.Instance.astar.Nodes = new Node[heightCount, widthCount];
 
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i < widthCount; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < heightCount; j++)
             {
-                GameObject g = Instantiate(grid);
-                Vector3 pos = new Vector3(i - width / 2f + 0.5f, 0.05f, j - height / 2f + 0.5f);
+                GameObject g = Object.Instantiate(grid);
+                Vector3 pos = new((i + 0.5f - widthCount / 2f) * scale  , 0.05f, (j - heightCount / 2f + 0.5f) * scale);
                 g.transform.position = pos;
                 g.transform.SetParent(gridMap.transform);
+                g.transform.localScale *= gridSize;
 
                 gridsArray[i, j] = g;
                 Node node = new Node(true, pos, j, i, normalColor);
-                Astar.Instance.Nodes[j, i] = node;
-                Astar.Instance.NodesDict.Add(pos, node);
+                GameManager.Instance.astar.Nodes[j, i] = node;
+                GameManager.Instance.astar.NodesDict.Add(pos, node);
 
             }
         }
@@ -79,7 +74,7 @@ public class MapManager : MonoBehaviour, IManager
     public void ShowGrid()
     {
         gridMap.SetActive(true);
-        foreach(var node in Astar.Instance.Nodes)
+        foreach(var node in GameManager.Instance.astar.Nodes)
         {
             if (node.walkable)
             {
@@ -90,7 +85,7 @@ public class MapManager : MonoBehaviour, IManager
 
     public void HideGrid()
     {
-        foreach (var node in Astar.Instance.Nodes)
+        foreach (var node in GameManager.Instance.astar.Nodes)
         {
             gridsArray[node.gridX, node.gridY].SetActive(false);
         }

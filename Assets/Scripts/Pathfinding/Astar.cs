@@ -2,28 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Astar : MonoBehaviour
+public class Astar : IManager
 {
-    public static Astar Instance;
-
     public Node startNode;
     public Node targetNode;
 
     private Node[,] nodes;
     private Dictionary<Vector3, Node> nodesDict = new();
     private MapManager map;
+
     public Node[,] Nodes { get => nodes; set => nodes = value; }
     public Dictionary<Vector3, Node> NodesDict => nodesDict;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
-
-    public void Start()
+    public override void PostAwake()
     {
         map = GameManager.Instance.mapManager;
     }
+
     public Node NodeFromPosition(Vector2 position)
     {
         return nodesDict[position];

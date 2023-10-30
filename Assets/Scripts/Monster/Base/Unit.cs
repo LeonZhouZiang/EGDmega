@@ -6,5 +6,4 @@ public class Unit : MonoBehaviour
 {
     public string unitName;
     public Vector3 postition;
-    public Stats[] stats;
 }

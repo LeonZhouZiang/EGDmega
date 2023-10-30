@@ -16,30 +16,21 @@ public class MouseStateManager : IManager
     private Vector2 startPos;
     private int range;
 
-    public void PostAwake()
+    public override void PostAwake()
     {
 
     }
-    public void PreUpdate()
+    public override void PreUpdate()
     {
         
         
     }
 
-    public void PostUpdate()
+    public override void PostUpdate()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
         OnMouseAction(ray);
-    }
-
-    public void PreLateUpdate()
-    {
-
-    }
-    public void PostLateUpdate()
-    {
-
     }
 
     private void UpdateColor(RaycastHit hit)
@@ -57,7 +48,7 @@ public class MouseStateManager : IManager
                 //click to select
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Node g = Astar.Instance.NodeFromPosition(hit.collider.transform.position);
+                    Node g = GameManager.Instance.astar.NodeFromPosition(hit.collider.transform.position);
                     GridCallback.Invoke(g);
                     Debug.Log("Get node");
                 }
@@ -74,7 +65,7 @@ public class MouseStateManager : IManager
             //click to select
             if (Input.GetMouseButtonDown(0))
             {
-                Node[] path = Astar.Instance.TryFindPath(startPos, hit.collider.transform.position, range);
+                Node[] path = GameManager.Instance.astar.TryFindPath(startPos, hit.collider.transform.position, range);
                 if(path.Length != 0)
                 {
                     //reachable

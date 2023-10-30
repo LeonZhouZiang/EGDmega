@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IManager
+public abstract class IManager
 {
-    public abstract void PostAwake();
-    public abstract void PreUpdate();
-    public abstract void PostUpdate();
+    protected virtual void Awake() { }
+    public virtual void PostAwake() { }
+    public virtual void PreUpdate() { }
+    public virtual void PostUpdate() { }
 
-    public abstract void PreLateUpdate();
-    public abstract void PostLateUpdate();
+    public virtual void PreLateUpdate() { }
+    public virtual void PostLateUpdate() { }
 
 }
