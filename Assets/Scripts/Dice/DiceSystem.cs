@@ -15,7 +15,11 @@ public class DiceSystem : IManager
     private int currentValue = 0;
 
     public int CurrentValue { set => currentValue = value; get => currentValue; }
-    
+
+    public override void PostAwake()
+    {
+        dice = diceObject.GetComponent<Dice>();
+    }
 
     public void ShowDice()
     {
@@ -36,10 +40,6 @@ public class DiceSystem : IManager
         diceObject.SetActive(false);
     }
 
-    public override void PostAwake()
-    {
-        dice = diceObject.GetComponent<Dice>();
-    }
 
     
 }

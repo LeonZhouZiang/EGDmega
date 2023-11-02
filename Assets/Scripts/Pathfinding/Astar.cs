@@ -19,10 +19,16 @@ public class Astar : IManager
         map = GameManager.Instance.mapManager;
     }
 
-    public Node NodeFromPosition(Vector2 position)
+    public Node NodeFromWorldPosition(Vector2 position)
+    {
+        Vector3 pos = new Vector3(position.x, 0, position.y);
+        return nodesDict[pos];
+    }
+    public Node NodeFromWorldPosition(Vector3 position)
     {
         return nodesDict[position];
     }
+
 
     public void ResetColor()
     {
@@ -37,8 +43,8 @@ public class Astar : IManager
 
     public Node[] TryFindPath(Vector2 startPos, Vector2 targetPos, int steps)
     {
-        startNode = NodeFromPosition(startPos);
-        targetNode = NodeFromPosition(targetPos);
+        startNode = NodeFromWorldPosition(startPos);
+        targetNode = NodeFromWorldPosition(targetPos);
 
         if (startNode != null && targetNode != null)
         {
@@ -149,7 +155,7 @@ public class Astar : IManager
 public class Node
 {
     public bool walkable;
-    public Vector2 position;
+    public Vector2 worldPosition;
     public int gridX;
     public int gridY;
 
@@ -161,7 +167,7 @@ public class Node
     public Node(bool walkable, Vector2 position, int gridX, int gridY, Color color)
     {
         this.walkable = walkable;
-        this.position = position;
+        this.worldPosition = position;
         this.gridX = gridX;
         this.gridY = gridY;
         this.color = color;

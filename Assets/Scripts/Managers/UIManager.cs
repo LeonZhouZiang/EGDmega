@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,7 +9,20 @@ public class UIManager : IManager
 {
     TextMeshProUGUI stateText;
 
-    public GameObject reticle;
+    
+
+    [Header("Survivor info")]
+    GameObject survivorInfoPanel;
+    TextMeshProUGUI survivorText;
+    SpriteRenderer survivorItem;
+
+    [Header("Monster info")]
+
+    GameObject monsterInfoPanel;
+    TextMeshProUGUI monsterInfo;
+    GameObject monsterCardDesk;
+
+    public GameObject monsterReticle;
     public override void PostAwake()
     {
 
@@ -21,23 +35,58 @@ public class UIManager : IManager
     public override void PostUpdate()
     {
     }
+    //œ‘ æΩ«…´ Ù–‘
+    public void ShowSurvivorInfo(Survivor survivor)
+    {
 
+        survivorInfoPanel.SetActive(true);
+        survivorText.text = survivor.name;
+        survivorItem.sprite = survivor.items.image;
+
+    }
+    public void CloseSurvivorInfo()
+    {
+        survivorInfoPanel.SetActive(false);
+    }
+
+    //monster
+    public void ShowMonsterInfo(GameObject monster)
+    {
+        Monster m = monster.GetComponent<Monster>();
+        monsterInfoPanel.SetActive(true);
+    }
 
     public void UpdateStateText(string content)
     {
         stateText.text = content;
     }
 
+    internal void ShuffleCards()
+    {
+        throw new NotImplementedException();
+    }
+
+    //reticle
     public void SetReticle(Vector2 pos, float height = 0.5f, float scale = 1f)
     {
-        reticle.SetActive(true);
+        monsterReticle.SetActive(true);
         Vector3 position = new(pos.x, height, pos.y);
-        reticle.transform.position = position;
-        reticle.transform.localScale = new Vector3(scale, scale, scale);
+        monsterReticle.transform.position = position;
+        monsterReticle.transform.localScale = new Vector3(scale, scale, scale);
     }
 
     public void CleanReticle()
     {
-        reticle.SetActive(false);
+        monsterReticle.SetActive(false);
     }
+
+    //public void SetMonsterTarget(GameObject target)
+    //{
+    //    monsterReticle.SetActive(true);
+    //    monsterReticle.transform.position = target.transform.position;
+    //}
+    //public void CleanMonsterTarget()
+    //{
+    //    monsterReticle.SetActive(false);
+    //}
 }

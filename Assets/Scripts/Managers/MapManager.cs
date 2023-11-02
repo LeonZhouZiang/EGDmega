@@ -23,9 +23,9 @@ public class MapManager : IManager
     Color hoverColor;
 
     private GameObject[,] gridsArray;
-    private GameObject gridMap;
+    private GameObject checkerBoard;
 
-    public GameObject GridMap => gridMap;
+    public GameObject CheckerBoard => checkerBoard;
     public GameObject[,] GridsArray { get { return gridsArray; } }
 
     public override void PostAwake()
@@ -48,7 +48,7 @@ public class MapManager : IManager
     //generate map
     public void GenerateMap()
     {
-        gridMap = new GameObject("GridMap");
+        checkerBoard = new GameObject("GridMap");
         gridsArray = new GameObject[widthCount, heightCount];
         GameManager.Instance.astar.Nodes = new Node[heightCount, widthCount];
 
@@ -59,7 +59,7 @@ public class MapManager : IManager
                 GameObject g = Object.Instantiate(grid);
                 Vector3 pos = new((i + 0.5f - widthCount / 2f) * scale  , 0.05f, (j - heightCount / 2f + 0.5f) * scale);
                 g.transform.position = pos;
-                g.transform.SetParent(gridMap.transform);
+                g.transform.SetParent(checkerBoard.transform);
                 g.transform.localScale *= gridSize;
 
                 gridsArray[i, j] = g;
@@ -69,11 +69,13 @@ public class MapManager : IManager
 
             }
         }
+
+        checkerBoard.SetActive(false);
     }
 
-    public void ShowGrid()
+    public void ShowCheckerBoard()
     {
-        gridMap.SetActive(true);
+        checkerBoard.SetActive(true);
         foreach(var node in GameManager.Instance.astar.Nodes)
         {
             if (node.walkable)
@@ -83,13 +85,13 @@ public class MapManager : IManager
         }
     }
 
-    public void HideGrid()
+    public void HideCheckerBoard()
     {
         foreach (var node in GameManager.Instance.astar.Nodes)
         {
             gridsArray[node.gridX, node.gridY].SetActive(false);
         }
-        gridMap.SetActive(false);
+        checkerBoard.SetActive(false);
     }
 
     public void UpdatePathColor(Node[] nodes, Node hoverNode)

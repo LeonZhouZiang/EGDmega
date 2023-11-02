@@ -6,10 +6,14 @@ using UnityEngine;
 [System.Serializable]
 public class MouseStateManager : IManager
 {
+    /// <summary>
+    /// Unit/Grid/Move are used for combat selection
+    /// Normal select and shows unit/card info.
+    /// </summary>
     public enum State{ UNIT, GRID, MOVE, CARD, NORMAL }
     public static State state;
 
-    public static Action<Unit> UnitCallback;
+    public static Action<Unit> MonsterCallback;
     public static Action<Node> GridCallback;
     public static Action<Node[]> MoveCallback;
 
@@ -20,16 +24,12 @@ public class MouseStateManager : IManager
     {
 
     }
-    public override void PreUpdate()
-    {
-        
-        
-    }
 
     public override void PostUpdate()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
+
         OnMouseAction(ray);
     }
 
@@ -39,6 +39,11 @@ public class MouseStateManager : IManager
     }
     public void TrySelectGrid(Ray ray)
     {
+        if (Input.GetMouseButtonDown(1))
+        {
+            CleanState();
+        }
+
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             if (hit.collider.CompareTag("Grid"))
@@ -48,7 +53,7 @@ public class MouseStateManager : IManager
                 //click to select
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Node g = GameManager.Instance.astar.NodeFromPosition(hit.collider.transform.position);
+                    Node g = GameManager.Instance.astar.NodeFromWorldPosition(hit.collider.transform.position);
                     GridCallback.Invoke(g);
                     Debug.Log("Get node");
                 }
@@ -59,6 +64,12 @@ public class MouseStateManager : IManager
 
     public void TrySelectDestination(Ray ray)
     {
+        if (Input.GetMouseButtonDown(1))
+        {
+            CleanState();
+            return;
+        }
+
         if (Physics.Raycast(ray, out RaycastHit hit, LayerMask.GetMask("Grid")))
         {
             UpdateColor(hit);
@@ -73,30 +84,66 @@ public class MouseStateManager : IManager
                     CleanState();
                 }
             }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                CleanState();
-            }
         }
     }
 
-    public void TryGetUnit(Ray ray)
+    public void TryGetMonster(Ray ray)
     {
+        if (Input.GetMouseButtonDown(1))
+        {
+            CleanState();
+        }
+
         if (Physics.Raycast(ray, out RaycastHit hit, LayerMask.GetMask("Unit")))
         {
             if (hit.collider.CompareTag("Monster"))
             {
+                //select target
+                if (Input.GetMouseButtonDown(0))
+                {
+                    var monster = hit.collider.GetComponent<Monster>();
+                    MonsterCallback.Invoke(monster);
+                    CleanState();
+                }
+                //only hover
+                else { GameManager.Instance.uiManager.SetReticle(hit.transform.position, 0.5f, hit.transform.localScale.x); }
                 
             }
+            else
+                GameManager.Instance.uiManager.CleanReticle();
         }
     }
 
-    public void CardDisplayState()
+    public void TryGetUnitInfo(Ray ray)
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            CleanState();
+            return;
+        }
+
+        if (Physics.Raycast(ray, out RaycastHit hit, LayerMask.GetMask("Unit")))
+        {
+            if (hit.collider.CompareTag("Monster") && Input.GetMouseButtonDown(0))
+            {
+                GameManager.Instance.uiManager.ShowMonsterInfo(hit.collider.gameObject);
+            }
+            else if (hit.collider.CompareTag("Player") && Input.GetMouseButtonDown(0))
+            {
+                GameManager.Instance.uiManager.ShowSurvivorInfo(hit.collider.gameObject.GetComponent<Survivor>());
+            }
+        }
+
+    }
+
+    public void CardDisplayState(Ray ray)
     {
         if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             CleanState();
+            return;
         }
+
     }
 
     private void CleanState()
@@ -118,21 +165,21 @@ public class MouseStateManager : IManager
         else if(state == State.MOVE)
         {
             TrySelectDestination(ray);
-            TryGetUnit(ray);
             return;
         }
         else if (state == State.UNIT)
         {
-            TryGetUnit(ray);
+            TryGetMonster(ray);
             return;
         }
         else if(state == State.NORMAL)
         {
-            
+            TryGetUnitInfo(ray);
+            return;
         }
         else if(state == State.CARD)
         {
-            CardDisplayState();
+            CardDisplayState(ray);
         }
         else
         {
@@ -160,20 +207,16 @@ public class MouseStateManager : IManager
         GridCallback = gridCallback;
         state = State.GRID;
 
-        GameManager.Instance.mapManager.ShowGrid();
+        GameManager.Instance.mapManager.ShowCheckerBoard();
         GameManager.Instance.uiManager.UpdateStateText("Select a target");
     }
     public void RequireUnit(int distance, Action<Unit> unitCallback)
     {
         range = distance;
-        UnitCallback = unitCallback;
+        MonsterCallback = unitCallback;
         state = State.UNIT;
 
         GameManager.Instance.uiManager.UpdateStateText("Select a target");
     }
 
-    public void RequireShowCard(Vector2[] gridPos)
-    {
-        GameManager.Instance.mapManager.ShowGrid();
-    }
 }

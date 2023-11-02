@@ -6,8 +6,16 @@ using UnityEngine;
 public class SingleAction
 {
     public string name;
-    void Move()
-    {
+    public enum TargetSelectType {GRID, UNIT }
 
+    //Grid offset
+    public Vector3[] Range = { Vector3.zero };
+
+
+    public virtual void Effect(Unit targets)
+    {
+        
     }
+
+   
 }

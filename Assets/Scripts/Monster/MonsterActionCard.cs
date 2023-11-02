@@ -6,14 +6,14 @@ public class MonsterActionCard : MonoBehaviour
 {
     public string cardName;
     public SortedList<int, Phase> actionList = new();
-    public Actions currentActionCard;
+    public GameObject currentAction;
 
-    public MonsterInfo info;
+    public Sprite image;
 }
 
 [System.Serializable]
 public class Phase
 {
     public int prepareTime;
-    List<Actions> actions;
+    List<SingleAction> actions;
 }
