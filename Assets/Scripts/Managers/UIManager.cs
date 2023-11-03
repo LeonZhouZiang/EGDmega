@@ -3,38 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class UIManager : IManager
 {
-    TextMeshProUGUI stateText;
+    public TextMeshProUGUI stateText;
 
-    
 
     [Header("Survivor info")]
-    GameObject survivorInfoPanel;
-    TextMeshProUGUI survivorText;
-    SpriteRenderer survivorItem;
+    public GameObject survivorInfoPanel;
+    public TextMeshProUGUI survivorText;
+    public SpriteRenderer survivorItem;
 
     [Header("Monster info")]
 
-    GameObject monsterInfoPanel;
-    TextMeshProUGUI monsterInfo;
-    GameObject monsterCardDesk;
+    public GameObject monsterInfoPanel;
+    public TextMeshProUGUI monsterInfo;
+    public GameObject monsterCardDesk;
 
     public GameObject monsterReticle;
+    [Header("Dice")]
+    public Button confirmRollBtn;
+    public Button fastRollBtn;
+    public TextMeshProUGUI diceValueText;
     public override void PostAwake()
     {
 
     }
     
-    public override void PreUpdate()
-    {
 
-    }
-    public override void PostUpdate()
+    public void UpdateValueText(int value)
     {
+        diceValueText.gameObject.SetActive(true);
+        diceValueText.text = "Roll Result: " + value.ToString();
     }
+    public void HideDice()
+    {
+        diceValueText.gameObject.SetActive(false); 
+    }
+
     //œ‘ æΩ«…´ Ù–‘
     public void ShowSurvivorInfo(Survivor survivor)
     {

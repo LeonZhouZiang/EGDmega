@@ -15,10 +15,6 @@ public class Dice : MonoBehaviour
     private bool inHand = false;
     private bool stable = false;
 
-    void Start()
-    {
-        
-    }
 
     private void SetIgnore()
     {
@@ -93,11 +89,12 @@ public class Dice : MonoBehaviour
         }
         else
         {
+            //rolled, and stopped, pass value!
             if(!stable && rb.velocity.magnitude + rb.angularVelocity.magnitude <= 0.1f)
             {
-                
                 stable = true;
-                GameManager.Instance.diceSystem.CurrentValue = value;
+                GameManager.Instance.diceSystem.ReceiveValueFromDice(value);
+                
             }
         }
     }
@@ -106,7 +103,7 @@ public class Dice : MonoBehaviour
     {
         inHand = false;
         stable = true;
-        GameManager.Instance.diceSystem.CurrentValue = Random.Range(1, 7);
+        GameManager.Instance.diceSystem.ReceiveValueFromDice(Random.Range(1, 7));
         
     }
 }
