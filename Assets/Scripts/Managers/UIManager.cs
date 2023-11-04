@@ -21,6 +21,7 @@ public class UIManager : IManager
     public GameObject monsterInfoPanel;
     public TextMeshProUGUI monsterInfo;
     public GameObject monsterCardDesk;
+    public TextMeshProUGUI monsterCardNum;
 
     public GameObject monsterReticle;
     [Header("Dice")]
@@ -71,7 +72,7 @@ public class UIManager : IManager
 
     internal void ShuffleCards()
     {
-        throw new NotImplementedException();
+        monsterCardNum.text = "6";
     }
 
     //reticle
