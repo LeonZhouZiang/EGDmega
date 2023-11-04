@@ -47,13 +47,13 @@ public class UIManager : IManager
     //œ‘ æΩ«…´ Ù–‘
     public void ShowSurvivorInfo(Survivor survivor)
     {
-
+        Debug.Log("Show player info");
         survivorInfoPanel.SetActive(true);
         survivorText.text = survivor.name;
         survivorItem.sprite = survivor.items.image;
 
     }
-    public void CloseSurvivorInfo()
+    public void HideSurvivorInfo()
     {
         survivorInfoPanel.SetActive(false);
     }
@@ -63,6 +63,11 @@ public class UIManager : IManager
     {
         Monster m = monster.GetComponent<Monster>();
         monsterInfoPanel.SetActive(true);
+        Debug.Log("Show monster info");
+    }
+    public void HideMonsterInfo()
+    {
+        monsterInfoPanel.SetActive(false);
     }
 
     public void UpdateStateText(string content)

@@ -98,20 +98,22 @@ public class MapManager : IManager
     {
         foreach(var node in nodes)
         {
-            gridsArray[node.gridY, node.gridX].GetComponent<SpriteRenderer>().color = pathColor;
+            gridsArray[node.gridY, node.gridX].GetComponent<MeshRenderer>().material.color = pathColor;
         }
 
-        gridsArray[hoverNode.gridY, hoverNode.gridX].GetComponent<SpriteRenderer>().color = hoverColor;
+        UpdateHoverColor(hoverNode);
     }
 
-    public void UpdateRegionColor()
+    public void UpdateHoverColor(Node node)
     {
-
+        gridsArray[node.gridY, node.gridX].GetComponent<MeshRenderer>().material.color = hoverColor;
     }
-
-    public void UpdateGridHover()
+    public void UpdateRegionColor(Node[] nodes)
     {
-
+        foreach (var node in nodes)
+        {
+            gridsArray[node.gridY, node.gridX].GetComponent<MeshRenderer>().material.color = pathColor;
+        }
     }
 
     public void UpdateUnitHover()
@@ -123,7 +125,7 @@ public class MapManager : IManager
     {
         foreach(var grid in gridsArray)
         {
-            grid.GetComponent<SpriteRenderer>().color = normalColor;
+            grid.GetComponent<MeshRenderer>().material.color = normalColor;
         }
 
     }

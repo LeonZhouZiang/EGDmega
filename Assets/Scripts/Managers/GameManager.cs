@@ -48,12 +48,11 @@ public class GameManager : MonoBehaviour
 
             PostAwakesHandler += manager.PostAwake;
             PreUpdatesHandler += manager.PreUpdate;
-            PostUpdatesHandler += manager.PostLateUpdate;
+            PostUpdatesHandler += manager.PostUpdate;
         }
     }
     private void Start()
     {
-        
     }
 
     void Update()

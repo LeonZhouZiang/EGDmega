@@ -42,9 +42,10 @@ public class MouseStateManager : IManager
         if (Input.GetMouseButtonDown(1))
         {
             CleanState();
+            GameManager.Instance.mapManager.HideCheckerBoard();
         }
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Grid")))
         {
             if (hit.collider.CompareTag("Grid"))
             {
@@ -67,10 +68,11 @@ public class MouseStateManager : IManager
         if (Input.GetMouseButtonDown(1))
         {
             CleanState();
+            GameManager.Instance.mapManager.HideCheckerBoard();
             return;
         }
 
-        if (Physics.Raycast(ray, out RaycastHit hit, LayerMask.GetMask("Grid")))
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Grid")))
         {
             UpdateColor(hit);
             //click to select
@@ -80,6 +82,7 @@ public class MouseStateManager : IManager
                 if(path.Length != 0)
                 {
                     //reachable
+                    GameManager.Instance.mapManager.UpdatePathColor(path, path[0]);
                     MoveCallback.Invoke(path);
                     CleanState();
                 }
@@ -94,7 +97,7 @@ public class MouseStateManager : IManager
             CleanState();
         }
 
-        if (Physics.Raycast(ray, out RaycastHit hit, LayerMask.GetMask("Unit")))
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Unit")))
         {
             if (hit.collider.CompareTag("Monster"))
             {
@@ -119,13 +122,16 @@ public class MouseStateManager : IManager
         if (Input.GetMouseButtonDown(1))
         {
             CleanState();
+            GameManager.Instance.uiManager.HideMonsterInfo();
+            GameManager.Instance.uiManager.HideSurvivorInfo();
             return;
         }
 
-        if (Physics.Raycast(ray, out RaycastHit hit, LayerMask.GetMask("Unit")))
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Unit")))
         {
             if (hit.collider.CompareTag("Monster") && Input.GetMouseButtonDown(0))
             {
+                Debug.Log("Show monster info");
                 GameManager.Instance.uiManager.ShowMonsterInfo(hit.collider.gameObject);
             }
             else if (hit.collider.CompareTag("Player") && Input.GetMouseButtonDown(0))
@@ -174,6 +180,7 @@ public class MouseStateManager : IManager
         }
         else if(state == State.NORMAL)
         {
+           
             TryGetUnitInfo(ray);
             return;
         }
@@ -185,11 +192,6 @@ public class MouseStateManager : IManager
         {
             Debug.Log("No state");
         }
-        //exit selection
-        if (Input.GetMouseButton(1))
-        {
-            CleanState();
-        }
     }
 
     public void RequireMove(Vector2 start, int distance, Action<Node[]> moveCallback)
@@ -199,7 +201,8 @@ public class MouseStateManager : IManager
         MoveCallback = moveCallback;
         state = State.MOVE;
 
-        GameManager.Instance.uiManager.UpdateStateText("Select a target");
+        GameManager.Instance.mapManager.ShowCheckerBoard();
+        GameManager.Instance.uiManager.UpdateStateText("Select a grid");
     }
     public void RequireGrid(int distance, Action<Node> gridCallback)
     {
@@ -208,7 +211,7 @@ public class MouseStateManager : IManager
         state = State.GRID;
 
         GameManager.Instance.mapManager.ShowCheckerBoard();
-        GameManager.Instance.uiManager.UpdateStateText("Select a target");
+        GameManager.Instance.uiManager.UpdateStateText("Select a grid");
     }
     public void RequireUnit(int distance, Action<Unit> unitCallback)
     {
