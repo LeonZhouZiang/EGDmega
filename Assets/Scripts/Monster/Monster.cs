@@ -23,6 +23,7 @@ public class Monster : Unit
     {
         totalHealth = monsterInfo.totalHealth;
         monsterName = monsterInfo.monsterName;
+        ShuffleCard();
     }
 
     void Update()
@@ -39,31 +40,52 @@ public class Monster : Unit
         }
     }
 
-    public void DrawNewActionCard()
+    public MonsterActionCard DrawNewActionCard()
     {
-        if(shuffledDeck.Count == 0)
-        {
-            shuffledDeck = ShuffleCards();
-        }
-
-        currentActionCard = shuffledDeck.Pop();
-
-        GameManager.Instance.uiManager.ShuffleCards();
-        GameManager.Instance.combatManager.Activate(currentActionCard);
+    if (shuffledDeck.Count == 0)
+    {
+       ShuffleCard();
     }
+
+    currentActionCard = shuffledDeck.Pop();
+
+    GameManager.Instance.uiManager.ShuffleCards(); // Update UI
+    GameManager.Instance.combatManager.Activate(currentActionCard); // Activate the card
+
+    return currentActionCard; // Return the drawn card
+    }
+
 
     public Stack<MonsterActionCard> ShuffleCards()
     {
-        Stack<MonsterActionCard> newDeck = new();
-        foreach(var card in actionCardsDeck)
+        // 创建一个列表来保存牌堆中的牌
+        List<MonsterActionCard> cardsList = new List<MonsterActionCard>(actionCardsDeck);
+        
+        // 使用System.Random来生成随机数
+        System.Random rng = new System.Random();
+        
+        // 从最后一张牌开始，向前遍历牌堆
+        int n = cardsList.Count;
+        while (n > 1) 
         {
-            newDeck.Push(card);
+            n--;
+            // 随机选择一个元素（介于0和n之间，包括0但不包括n）
+            int k = rng.Next(n + 1);
+            
+            // 交换当前元素和随机选择的元素
+            MonsterActionCard value = cardsList[k];
+            cardsList[k] = cardsList[n];
+            cardsList[n] = value;
         }
-
-        GameManager.Instance.uiManager.ShuffleCards();
-
-        return newDeck;
+        
+        // 将洗好的列表转换为堆栈并返回
+        return new Stack<MonsterActionCard>(cardsList);
     }
+    public void ShuffleCard()
+    {
+        shuffledDeck = ShuffleCards();
+    }
+
 }
 
 [System.Serializable]

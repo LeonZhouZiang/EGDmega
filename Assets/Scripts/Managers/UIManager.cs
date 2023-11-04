@@ -21,7 +21,8 @@ public class UIManager : IManager
     public GameObject monsterInfoPanel;
     public TextMeshProUGUI monsterInfo;
     public GameObject monsterCardDesk;
-    public TextMeshProUGUI monsterCardNum;
+    public TextMeshProUGUI deckCountText;
+    public Monster monster;
 
     public GameObject monsterReticle;
     [Header("Dice")]
@@ -70,10 +71,25 @@ public class UIManager : IManager
         stateText.text = content;
     }
 
-    internal void ShuffleCards()
+   internal void ShuffleCards()
     {
-        monsterCardNum.text = "6";
+        // Check if the deckCountText or monster reference is null before trying to access them
+        if (deckCountText == null)
+        {
+            Debug.LogError("deckCountText is not set on the UIManager.");
+            return;
+        }
+        if (monster == null || monster.shuffledDeck == null)
+        {
+            Debug.LogError("Monster or shuffledDeck is not initialized.");
+            return;
+        } 
+
+        // Update the UI text with the current count of the shuffled deck
+        deckCountText.text = monster.shuffledDeck.Count.ToString();
+        // Add any additional UI updates for shuffling here
     }
+
 
     //reticle
     public void SetReticle(Vector2 pos, float height = 0.5f, float scale = 1f)

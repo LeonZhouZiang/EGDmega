@@ -78,6 +78,6 @@ public class CombatManager : IManager
     {
         currentActionCard = actionCard;
 
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 }

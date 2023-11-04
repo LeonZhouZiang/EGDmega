@@ -36,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.13}
   m_SizeDelta: {x: 2, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2572653285061725623
@@ -128,7 +128,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4545354643757475614}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 6.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -136,7 +136,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6069402074921200201
@@ -230,7 +230,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 97.74536, y: 16.54697, z: 97.80414, w: 29.878399}
+  m_margin: {x: 97.74536, y: 23.425978, z: 97.80414, w: 23.448038}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -342,8 +342,12 @@ MonoBehaviour:
     monsterInfoPanel: {fileID: 0}
     monsterInfo: {fileID: 0}
     monsterCardDesk: {fileID: 0}
-    monsterCardNum: {fileID: 0}
+    deckCountText: {fileID: 0}
+    monster: {fileID: 0}
     monsterReticle: {fileID: 0}
     confirmRollBtn: {fileID: 0}
     fastRollBtn: {fileID: 0}
     diceValueText: {fileID: 0}
+  cardPrefab: {fileID: 3085783490914361721, guid: e4df474e3481dec409690d75e3ccb432, type: 3}
+  cardParent: {fileID: 6777323720893474079}
+  drawPoint: {fileID: 0}
