@@ -11,7 +11,7 @@ public class MouseStateManager : IManager
     /// Normal select and shows unit/card info.
     /// </summary>
     public enum State{ UNIT, GRID, MOVE, CARD, NORMAL }
-    public static State state;
+    public static State state = State.NORMAL;
 
     public static Action<Unit> MonsterCallback;
     public static Action<Node> GridCallback;

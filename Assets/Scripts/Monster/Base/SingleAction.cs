@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class SingleAction
 {
-    public string name;
+    public string actionName;
     public enum TargetSelectType {GRID, UNIT }
 
     //Grid offset

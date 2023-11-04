@@ -8,21 +8,18 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    public CombatManager combatManager;
-    public UIManager uiManager;
-    public MouseStateManager mouseStateManager;
-    public MapManager mapManager;
+    public CombatManager combatManager = new();
+    public UIManager uiManager = new();
+    public MouseStateManager mouseStateManager = new();
+    public MapManager mapManager = new();
+    public DiceSystem diceSystem = new();
+    public Astar astar = new();
 
-    public DiceSystem diceSystem;
-    public Astar astar;
+    public delegate void MyHandler();
 
-    public delegate void PreUpdates();
-    public delegate void PostUpdates ();
-    public delegate void PostAwakes();
-
-    public event PreUpdates PreUpdatesHandler;
-    public event PostUpdates PostUpdatesHandler;
-    public event PostAwakes PostAwakesHandler;
+    public event MyHandler PreUpdatesHandler;
+    public event MyHandler PostUpdatesHandler;
+    public event MyHandler PostAwakesHandler;
 
     private List<IManager> mySystems = new();
 
@@ -30,20 +27,12 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
-        combatManager = new CombatManager();
         mySystems.Add(combatManager);
-        uiManager = new UIManager();
         mySystems.Add(uiManager);
-
-        mouseStateManager = new MouseStateManager();
         mySystems.Add(mouseStateManager);
-        mapManager = new MapManager();
         mySystems.Add(mapManager);
-        diceSystem = new DiceSystem();
         mySystems.Add(diceSystem);
-        astar = new Astar();
         mySystems.Add(astar);
-
         RegisterSystems();
         
         PostAwakesHandler.Invoke();
@@ -51,12 +40,15 @@ public class GameManager : MonoBehaviour
 
     private void RegisterSystems()
     {
-        Type type = typeof(IManager);
-        foreach(var manager in mySystems)
+        
+
+        foreach (var manager in mySystems)
         {
-            PreUpdatesHandler += manager.PreUpdate;
-            PostUpdatesHandler += manager.PostUpdate;
+            Debug.Log(manager.GetType().Name + " registered!");
+
             PostAwakesHandler += manager.PostAwake;
+            PreUpdatesHandler += manager.PreUpdate;
+            PostUpdatesHandler += manager.PostLateUpdate;
         }
     }
     private void Start()
