@@ -265,7 +265,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0.7071068, w: 0}
   m_LocalPosition: {x: 0.2527, y: 0.6, z: 0.274}
-  m_LocalScale: {x: 0.02, y: 0.30000007, z: 0.02}
+  m_LocalScale: {x: 0.5, y: 7.500002, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8343198106222965102}
@@ -337,11 +337,10 @@ MonoBehaviour:
   uiManager:
     stateText: {fileID: 0}
     survivorInfoPanel: {fileID: 0}
-    survivorText: {fileID: 0}
-    survivorItem: {fileID: 0}
+    survivorActionPanle: {fileID: 0}
     monsterInfoPanel: {fileID: 0}
+    monsterDesk: {fileID: 0}
     monsterInfo: {fileID: 0}
-    monsterCardDesk: {fileID: 0}
     deckCountText: {fileID: 0}
     monster: {fileID: 0}
     monsterReticle: {fileID: 0}
