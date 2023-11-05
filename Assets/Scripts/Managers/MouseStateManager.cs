@@ -132,7 +132,7 @@ public class MouseStateManager : IManager
             if (hit.collider.CompareTag("Monster") && Input.GetMouseButtonDown(0))
             {
                 Debug.Log("Show monster info");
-                GameManager.Instance.uiManager.ShowMonsterInfo(hit.collider.gameObject);
+                GameManager.Instance.uiManager.ShowMonsterInfo(hit.collider.gameObject.GetComponent<Monster>());
             }
             else if (hit.collider.CompareTag("Player") && Input.GetMouseButtonDown(0))
             {

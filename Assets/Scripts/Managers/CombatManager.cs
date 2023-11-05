@@ -74,10 +74,15 @@ public class CombatManager : IManager
         GameManager.Instance.diceSystem.ReceiveAction(currentExecutingAction);
     }
 
-    internal void Activate(MonsterActionCard actionCard)
+    public void Activate(MonsterActionCard actionCard)
     {
         currentActionCard = actionCard;
 
         //throw new NotImplementedException();
+    }
+
+    public void FindNearestSurvivor(Monster monster)
+    {
+
     }
 }

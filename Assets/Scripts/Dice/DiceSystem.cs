@@ -43,11 +43,13 @@ public class DiceSystem : IManager
     public void ConfirmRoll()
     {
         CurrentWaitingAction.Invoke(currentValue);
+
         diceCamera.gameObject.SetActive(false);
         DiceCanvas.SetActive(false);
         diceObject.SetActive(false);
-
-        GameManager.Instance.uiManager.HideDice();
+        GameManager.Instance.uiManager.confirmRollBtn.gameObject.SetActive(false);
+        GameManager.Instance.uiManager.diceValueText.gameObject.SetActive(false);
+        GameManager.Instance.uiManager.HideDiceText();
     }
 
     public void ReceiveValueFromDice(int value)

@@ -12,9 +12,8 @@ public class UIManager : IManager
 
 
     [Header("Survivor info")]
-    public GameObject survivorInfoPanel;
-    public TextMeshProUGUI survivorText;
-    public SpriteRenderer survivorItem;
+    public SurvivorInfoPanel survivorInfoPanel;
+    //public SpriteRenderer survivorItem;
 
     [Header("Monster info")]
 
@@ -31,7 +30,6 @@ public class UIManager : IManager
     public TextMeshProUGUI diceValueText;
     public override void PostAwake()
     {
-
     }
     
 
@@ -40,7 +38,7 @@ public class UIManager : IManager
         diceValueText.gameObject.SetActive(true);
         diceValueText.text = "Roll Result: " + value.ToString();
     }
-    public void HideDice()
+    public void HideDiceText()
     {
         diceValueText.gameObject.SetActive(false); 
     }
@@ -49,26 +47,29 @@ public class UIManager : IManager
     public void ShowSurvivorInfo(Survivor survivor)
     {
         Debug.Log("Show player info");
-        survivorInfoPanel.SetActive(true);
-        survivorText.text = survivor.name;
-        survivorItem.sprite = survivor.items.image;
+        survivorInfoPanel.gameObject.SetActive(true);
+        survivorInfoPanel.survivorName.text = survivor.name;
+        survivorInfoPanel.weaponSlot.sprite = survivor.items.image;
 
+        CameraManager.Instance.MoveToTarget(survivor.transform.position);
     }
     public void HideSurvivorInfo()
     {
-        survivorInfoPanel.SetActive(false);
+        survivorInfoPanel.gameObject.SetActive(false);
+        CameraManager.Instance.ResetPosition();
     }
 
     //monster
-    public void ShowMonsterInfo(GameObject monster)
+    public void ShowMonsterInfo(Monster monster)
     {
-        Monster m = monster.GetComponent<Monster>();
         monsterInfoPanel.SetActive(true);
-        Debug.Log("Show monster info");
+
+        CameraManager.Instance.MoveToTarget(monster.transform.position);
     }
     public void HideMonsterInfo()
     {
         monsterInfoPanel.SetActive(false);
+        CameraManager.Instance.ResetPosition();
     }
 
     public void UpdateStateText(string content)

@@ -10,7 +10,7 @@ public class CameraManager : MonoBehaviour
     protected internal GameObject mainCamera;
     protected internal Vector3 startPos;
     protected internal Quaternion startRotation;
-    [Range(0.1f,1)]
+
     public float speed;
     public Vector3 positionOffset;
     public Quaternion rotationOffset;
@@ -38,8 +38,10 @@ public class CameraManager : MonoBehaviour
     {
         while(Vector3.SqrMagnitude(mainCamera.transform.position - positionOffset) > 0.01f)
         {
-            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, positionOffset + target, speed);
-            mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, rotationOffset, speed);
+            Vector3 newPosition = Vector3.Lerp(mainCamera.transform.position, target + positionOffset, Time.deltaTime * speed);
+            Quaternion newRotation = Quaternion.Lerp(mainCamera.transform.rotation, rotationOffset, Time.deltaTime * speed);
+            mainCamera.transform.position = newPosition;
+            mainCamera.transform.rotation = newRotation;
             yield return null;
         }
     }
@@ -48,8 +50,8 @@ public class CameraManager : MonoBehaviour
     {
         while (Vector3.SqrMagnitude(mainCamera.transform.position - startPos) > 0.01f)
         {
-            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, startPos, speed);
-            mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, startRotation, speed);
+            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, startPos, Time.deltaTime * speed);
+            mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, startRotation, Time.deltaTime * speed);
             yield return null;
         }
     }
