@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class SurvivorInfoPanel: MonoBehaviour
@@ -14,5 +15,5 @@ public class SurvivorInfoPanel: MonoBehaviour
     public TextMeshProUGUI legHP;
     public TextMeshProUGUI totalHealth;
 
-    public SpriteRenderer weaponSlot;
+    public Image weaponSlot;
 }

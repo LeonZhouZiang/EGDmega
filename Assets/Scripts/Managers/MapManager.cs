@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class MapManager : IManager
@@ -21,6 +22,8 @@ public class MapManager : IManager
     Color pathColor;
     [SerializeField]
     Color hoverColor;
+    [SerializeField]
+    Color rangeColor;
 
     private GameObject[,] gridsArray;
     private GameObject checkerBoard;
@@ -108,17 +111,31 @@ public class MapManager : IManager
     {
         gridsArray[node.gridY, node.gridX].GetComponent<MeshRenderer>().material.color = hoverColor;
     }
+
     public void UpdateRegionColor(Node[] nodes)
     {
         foreach (var node in nodes)
         {
-            gridsArray[node.gridY, node.gridX].GetComponent<MeshRenderer>().material.color = pathColor;
+            gridsArray[node.gridY, node.gridX].GetComponent<MeshRenderer>().material.color = rangeColor;
         }
     }
 
-    public void UpdateUnitHover()
+    public void UpdateRangeColor(Vector3 position, int range)
     {
+        Node origin = GameManager.Instance.astar.NodeFromWorldPosition(position);
+        for(int i = -range; i < range + 1; i++)
+        {
+            for(int j = -(range - Mathf.Abs(i)); j < range - Mathf.Abs(i) + 1; j++)
+            {
+                gridsArray[i + origin.gridX, j + origin.gridY].GetComponent<MeshRenderer>().material.color = rangeColor;
+            }
+        }
+    }
 
+    public void UpdateUnitHover(GameObject target)
+    {
+        Image sr = target.GetComponentInChildren<Image>();
+        
     }
 
     public void ResetColor()
@@ -127,6 +144,5 @@ public class MapManager : IManager
         {
             grid.GetComponent<MeshRenderer>().material.color = normalColor;
         }
-
     }
 }

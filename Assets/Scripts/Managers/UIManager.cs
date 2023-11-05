@@ -13,13 +13,14 @@ public class UIManager : IManager
 
     [Header("Survivor info")]
     public SurvivorInfoPanel survivorInfoPanel;
+    public GameObject survivorActionPanle;
     //public SpriteRenderer survivorItem;
 
     [Header("Monster info")]
 
     public GameObject monsterInfoPanel;
+    public GameObject monsterDesk;
     public TextMeshProUGUI monsterInfo;
-    public GameObject monsterCardDesk;
     public TextMeshProUGUI deckCountText;
     public Monster monster;
 
@@ -58,17 +59,24 @@ public class UIManager : IManager
         survivorInfoPanel.gameObject.SetActive(false);
         CameraManager.Instance.ResetPosition();
     }
-
+    //显示角色属性 + 行动
+    public void ShowSurvivorActionPanel(Survivor survivor)
+    {
+        ShowSurvivorInfo(survivor);
+        survivorActionPanle.SetActive(true);
+    }
     //monster
     public void ShowMonsterInfo(Monster monster)
     {
         monsterInfoPanel.SetActive(true);
+        monsterDesk.SetActive(true);
 
         CameraManager.Instance.MoveToTarget(monster.transform.position);
     }
     public void HideMonsterInfo()
     {
         monsterInfoPanel.SetActive(false);
+        monsterDesk.SetActive(false);
         CameraManager.Instance.ResetPosition();
     }
 

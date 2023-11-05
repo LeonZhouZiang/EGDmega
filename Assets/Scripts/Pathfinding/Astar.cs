@@ -85,7 +85,7 @@ public class Astar : IManager
             //find neighbors
             foreach (Node neighbor in GetNeighbors(currentNode))
             {
-                if (!neighbor.walkable || closedList.Contains(neighbor))
+                if (!neighbor.walkable || closedList.Contains(neighbor) || GetDistanceBetweenNodes(startNode,neighbor) > steps)
                 {
                     continue;
                 }
@@ -115,7 +115,14 @@ public class Astar : IManager
         int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
         return dstX + dstY;
     }
-
+    public int GetDistanceBetweenWorldPos(Vector3 a, Vector3 b)
+    {
+        Node nodeA = NodeFromWorldPosition(a);
+        Node nodeB = NodeFromWorldPosition(b);
+        int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
+        int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
+        return dstX + dstY;
+    }
     private Node[] Retrace(Node start, Node end)
     {
         List<Node> path = new List<Node>();

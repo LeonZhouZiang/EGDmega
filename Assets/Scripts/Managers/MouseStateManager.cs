@@ -19,7 +19,7 @@ public class MouseStateManager : IManager
 
     private Vector2 startPos;
     private int range;
-
+    private Unit sender;
     public override void PostAwake()
     {
 
@@ -33,10 +33,6 @@ public class MouseStateManager : IManager
         OnMouseAction(ray);
     }
 
-    private void UpdateColor(RaycastHit hit)
-    {
-
-    }
     public void TrySelectGrid(Ray ray)
     {
         if (Input.GetMouseButtonDown(1))
@@ -49,15 +45,29 @@ public class MouseStateManager : IManager
         {
             if (hit.collider.CompareTag("Grid"))
             {
-                UpdateColor(hit);
-
-                //click to select
-                if (Input.GetMouseButtonDown(0))
+                //in range
+                if (GameManager.Instance.astar.GetDistanceBetweenWorldPos(hit.transform.position, sender.worldPostition) < range)
                 {
                     Node g = GameManager.Instance.astar.NodeFromWorldPosition(hit.collider.transform.position);
-                    GridCallback.Invoke(g);
-                    Debug.Log("Get node");
+                    GameManager.Instance.mapManager.UpdateHoverColor(g);
+                    //click to select
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        GridCallback.Invoke(g);
+                        CleanState();
+                        GameManager.Instance.mapManager.HideCheckerBoard();
+                    }
                 }
+                //out range
+                else
+                {
+                    GameManager.Instance.mapManager.ResetColor();
+                }
+            }
+            //not hit
+            else
+            {
+                GameManager.Instance.mapManager.ResetColor();
             }
         }
         
@@ -74,19 +84,28 @@ public class MouseStateManager : IManager
 
         if (Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Grid")))
         {
-            UpdateColor(hit);
-            //click to select
-            if (Input.GetMouseButtonDown(0))
+            //in range
+            if (GameManager.Instance.astar.GetDistanceBetweenWorldPos(hit.transform.position, sender.worldPostition) < range)
             {
                 Node[] path = GameManager.Instance.astar.TryFindPath(startPos, hit.collider.transform.position, range);
-                if(path.Length != 0)
+                GameManager.Instance.mapManager.UpdatePathColor(path, path[0]);
+                //click to select & reachable
+                if (Input.GetMouseButtonDown(0) && path.Length != 0)
                 {
-                    //reachable
-                    GameManager.Instance.mapManager.UpdatePathColor(path, path[0]);
                     MoveCallback.Invoke(path);
                     CleanState();
                 }
             }
+            //out range
+            else
+            {
+                GameManager.Instance.mapManager.ResetColor();
+            }
+        }
+        //not hit
+        else
+        {
+            GameManager.Instance.mapManager.ResetColor();
         }
     }
 
@@ -101,19 +120,25 @@ public class MouseStateManager : IManager
         {
             if (hit.collider.CompareTag("Monster"))
             {
-                //select target
-                if (Input.GetMouseButtonDown(0))
+                //in range
+                if (GameManager.Instance.astar.GetDistanceBetweenWorldPos(hit.transform.position, sender.worldPostition) < range)
                 {
-                    var monster = hit.collider.GetComponent<Monster>();
-                    MonsterCallback.Invoke(monster);
-                    CleanState();
+                    //select target
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        var monster = hit.collider.GetComponent<Monster>();
+                        MonsterCallback.Invoke(monster);
+                        CleanState();
+                    }
+                    //only hover
+                    else { GameManager.Instance.uiManager.SetReticle(hit.transform.position, 0.5f, hit.transform.localScale.x); }
                 }
-                //only hover
-                else { GameManager.Instance.uiManager.SetReticle(hit.transform.position, 0.5f, hit.transform.localScale.x); }
                 
             }
             else
+            {
                 GameManager.Instance.uiManager.CleanReticle();
+            }
         }
     }
 
@@ -129,14 +154,22 @@ public class MouseStateManager : IManager
 
         if (Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Unit")))
         {
-            if (hit.collider.CompareTag("Monster") && Input.GetMouseButtonDown(0))
+            if (hit.collider.CompareTag("Monster") )
             {
-                Debug.Log("Show monster info");
-                GameManager.Instance.uiManager.ShowMonsterInfo(hit.collider.gameObject.GetComponent<Monster>());
+                GameManager.Instance.mapManager.UpdateUnitHover(hit.collider.gameObject);
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Debug.Log("Show monster info");
+                    GameManager.Instance.uiManager.ShowMonsterInfo(hit.collider.gameObject.GetComponent<Monster>());
+                }
             }
-            else if (hit.collider.CompareTag("Player") && Input.GetMouseButtonDown(0))
+            else if (hit.collider.CompareTag("Player"))
             {
-                GameManager.Instance.uiManager.ShowSurvivorInfo(hit.collider.gameObject.GetComponent<Survivor>());
+                GameManager.Instance.mapManager.UpdateUnitHover(hit.collider.gameObject);
+                if (Input.GetMouseButtonDown(0))
+                {
+                    GameManager.Instance.uiManager.ShowSurvivorInfo(hit.collider.gameObject.GetComponent<Survivor>());
+                }
             }
         }
 
@@ -165,16 +198,19 @@ public class MouseStateManager : IManager
     {
         if (state == State.GRID)
         {
+            GameManager.Instance.mapManager.UpdateRangeColor(sender.worldPostition, range);
             TrySelectGrid(ray);
             return;
         }
         else if(state == State.MOVE)
         {
+            GameManager.Instance.mapManager.UpdateRangeColor(sender.worldPostition, range);
             TrySelectDestination(ray);
             return;
         }
         else if (state == State.UNIT)
         {
+            GameManager.Instance.mapManager.UpdateRangeColor(sender.worldPostition, range);
             TryGetMonster(ray);
             return;
         }
@@ -194,29 +230,32 @@ public class MouseStateManager : IManager
         }
     }
 
-    public void RequireMove(Vector2 start, int distance, Action<Node[]> moveCallback)
+    public void RequireMove(Unit sender, Vector2 start, int distance, Action<Node[]> moveCallback)
     {
         range = distance;
         startPos = start;
+        this.sender = sender;
         MoveCallback = moveCallback;
         state = State.MOVE;
 
         GameManager.Instance.mapManager.ShowCheckerBoard();
         GameManager.Instance.uiManager.UpdateStateText("Select a grid");
     }
-    public void RequireGrid(int distance, Action<Node> gridCallback)
+    public void RequireGrid(Unit sender, int distance, Action<Node> gridCallback)
     {
         range = distance;
         GridCallback = gridCallback;
+        this.sender = sender;
         state = State.GRID;
 
         GameManager.Instance.mapManager.ShowCheckerBoard();
         GameManager.Instance.uiManager.UpdateStateText("Select a grid");
     }
-    public void RequireUnit(int distance, Action<Unit> unitCallback)
+    public void RequireUnit(Unit sender, int distance, Action<Unit> unitCallback)
     {
         range = distance;
         MonsterCallback = unitCallback;
+        this.sender = sender;
         state = State.UNIT;
 
         GameManager.Instance.uiManager.UpdateStateText("Select a target");
