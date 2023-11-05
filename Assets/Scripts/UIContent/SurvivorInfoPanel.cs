@@ -14,6 +14,8 @@ public class SurvivorInfoPanel: MonoBehaviour
     public TextMeshProUGUI handHP;
     public TextMeshProUGUI legHP;
     public TextMeshProUGUI totalHealth;
-
     public Image weaponSlot;
+
+    public GameObject actionPanel;
+    public GameObject infoPanel;
 }

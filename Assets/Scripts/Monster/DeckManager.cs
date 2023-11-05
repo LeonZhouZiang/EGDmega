@@ -27,7 +27,7 @@ public class DeckManager : MonoBehaviour
     {
         if (monster.shuffledDeck.Count > 0)
         {
-            MonsterActionCard cardData = monster.DrawNewActionCard();
+            MonsterActionCard cardData = monster.DrawAndActivateNewActionCard();
 
             // Instantiate the card game object
             GameObject cardObject = Instantiate(cardPrefab, this.transform.position, Quaternion.identity);

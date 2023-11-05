@@ -6,18 +6,19 @@ using UnityEngine;
 public class MonsterActionCard
 {
     public string cardName;
-    public SortedList<int, Phase> actionList = new();
+    public List<Phase> phaseList = new();
     public GameObject currentAction;
     public Sprite image;
     public ActionBar actionBar;
 
+    public SingleAction lastAction;
 }
 
 [System.Serializable]
 public class Phase
 {
     public int prepareTime;
-    List<SingleAction> actions;
+    public List<SingleAction> actions;
 }
 
 [System.Serializable]

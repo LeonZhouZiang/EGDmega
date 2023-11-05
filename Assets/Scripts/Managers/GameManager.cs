@@ -15,8 +15,9 @@ public class GameManager : MonoBehaviour
     public DiceSystem diceSystem = new();
     public Astar astar = new();
 
-    public delegate void MyHandler();
+    public CoroutineHelper coroutineHelper;
 
+    public delegate void MyHandler();
     public event MyHandler PreUpdatesHandler;
     public event MyHandler PostUpdatesHandler;
     public event MyHandler PostAwakesHandler;

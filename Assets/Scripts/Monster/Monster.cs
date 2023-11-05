@@ -33,26 +33,32 @@ public class Monster : Unit
 
     public void CheckCurrentActionCard()
     {
-        if(currentActionCard == null) DrawNewActionCard();
-        else
+        //check if current card is completed
+
+        if(currentActionCard != null)
         {
-            GameManager.Instance.combatManager.Activate(currentActionCard);
+            if (GameManager.Instance.combatManager.CheckCardComplete(currentActionCard))
+            {
+                DrawAndActivateNewActionCard();
+            }
         }
+        else 
+            DrawAndActivateNewActionCard();
     }
 
-    public MonsterActionCard DrawNewActionCard()
+    public MonsterActionCard DrawAndActivateNewActionCard()
     {
-    if (shuffledDeck.Count == 0)
-    {
-       ShuffleCard();
-    }
+        if (shuffledDeck.Count == 0)
+        {
+           ShuffleCard();
+        }
 
-    currentActionCard = shuffledDeck.Pop();
+        currentActionCard = shuffledDeck.Pop();
 
-    GameManager.Instance.uiManager.ShuffleCards(); // Update UI
-    GameManager.Instance.combatManager.Activate(currentActionCard); // Activate the card
+        GameManager.Instance.uiManager.ShuffleCards(); // Update UI
+        GameManager.Instance.combatManager.Activate(currentActionCard); // Activate the card
 
-    return currentActionCard; // Return the drawn card
+        return currentActionCard; // Return the drawn card
     }
 
 
@@ -78,7 +84,7 @@ public class Monster : Unit
             cardsList[n] = value;
         }
         
-        // 将洗好的列表转换为堆栈并返回
+        // 将洗好的列表转换为栈并返回
         return new Stack<MonsterActionCard>(cardsList);
     }
     public void ShuffleCard()

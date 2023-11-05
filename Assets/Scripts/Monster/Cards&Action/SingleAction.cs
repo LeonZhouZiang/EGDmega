@@ -6,6 +6,7 @@ using UnityEngine;
 public class SingleAction
 {
     public string actionName;
+
     public enum TargetSelectType {GRID, UNIT }
 
     //Grid offset
