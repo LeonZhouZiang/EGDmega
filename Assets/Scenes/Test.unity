@@ -2344,24 +2344,30 @@ MonoBehaviour:
   unitName: Survivor1
   worldPostition: {x: 0, y: 0, z: 0}
   orientation: {x: 0, y: 0, z: -1}
-  totalHealth: 0
+  survivorName: 
   basicMove:
     actionName: 
+    actionType: 0
+    selectionType: 0
     Range:
     - {x: 0, y: 0, z: 0}
   basicAttack:
     actionName: 
+    actionType: 0
+    selectionType: 0
     Range:
     - {x: 0, y: 0, z: 0}
   survivorInfo:
-    totalHealth: 10
     name: Sha Long
+    str: 0
+    dex: 0
   items:
     type: 
     name: 
-    id: 0
     actions: []
     image: {fileID: 0}
+  str: 0
+  dex: 0
 --- !u!1 &563906859
 GameObject:
   m_ObjectHideFlags: 0
@@ -3362,15 +3368,6 @@ MonoBehaviour:
     player1: {fileID: 0}
     player2: {fileID: 0}
     monster: {fileID: 0}
-    currentActionCard:
-      cardName: 
-      phaseList: []
-      currentAction: {fileID: 0}
-      image: {fileID: 0}
-      actionBar:
-        imageAttack: {fileID: 0}
-        imageMove: {fileID: 0}
-        actions: []
     turnOwner: {fileID: 0}
   uiManager:
     stateText: {fileID: 200863012}
@@ -3381,7 +3378,8 @@ MonoBehaviour:
     monsterInfo: {fileID: 0}
     deckCountText: {fileID: 0}
     monster: {fileID: 0}
-    monsterReticle: {fileID: 1809288439}
+    monsterBodyPartPanel: {fileID: 0}
+    reticle: {fileID: 0}
     confirmRollBtn: {fileID: 137164115}
     fastRollBtn: {fileID: 2112261488}
     diceValueText: {fileID: 231382622}

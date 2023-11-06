@@ -23,8 +23,9 @@ public class UIManager : IManager
     public TextMeshProUGUI monsterInfo;
     public TextMeshProUGUI deckCountText;
     public Monster monster;
+    public GameObject monsterBodyPartPanel;
 
-    public GameObject monsterReticle;
+    public GameObject reticle;
     [Header("Dice")]
     public Button confirmRollBtn;
     public Button fastRollBtn;
@@ -108,15 +109,20 @@ public class UIManager : IManager
     //reticle
     public void SetReticle(Vector2 pos, float height = 0.5f, float scale = 1f)
     {
-        monsterReticle.SetActive(true);
+        reticle.SetActive(true);
         Vector3 position = new(pos.x, height, pos.y);
-        monsterReticle.transform.position = position;
-        monsterReticle.transform.localScale = new Vector3(scale, scale, scale);
+        reticle.transform.position = position;
+        reticle.transform.localScale = new Vector3(scale, scale, scale);
     }
 
     public void CleanReticle()
     {
-        monsterReticle.SetActive(false);
+        reticle.SetActive(false);
+    }
+
+    internal void ShowMonsterBodyParts()
+    {
+
     }
 
     //public void SetMonsterTarget(GameObject target)

@@ -6,17 +6,16 @@ using UnityEngine;
 public class SingleAction
 {
     public string actionName;
+    public enum ActionType { MOVE, ATTACK}
+    public enum TargetType {GRID, UNIT }
 
-    public enum TargetSelectType {GRID, UNIT }
+    public ActionType actionType;
+    public TargetType selectionType;
 
-    //Grid offset
+    //aoe range
     public Vector3[] Range = { Vector3.zero };
 
-
-    public virtual void Effect(Unit targets)
-    {
-        
-    }
-
-   
+    public Effect effect;
 }
+
+

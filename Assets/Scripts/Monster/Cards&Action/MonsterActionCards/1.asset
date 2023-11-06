@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: 1
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterActionCardInfo
+  cardName: 
+  phaseList:
+  - prepareTime: 0
+    actions:
+    - actionName: 
+      actionType: 0
+      selectionType: 0
+      Range: []
+    - actionName: 
+      actionType: 1
+      selectionType: 1
+      Range: []
+  - prepareTime: 1
+    actions:
+    - actionName: Base attack
+      actionType: 0
+      selectionType: 0
+      Range: []
+  currentAction: {fileID: 0}
+  image: {fileID: 0}

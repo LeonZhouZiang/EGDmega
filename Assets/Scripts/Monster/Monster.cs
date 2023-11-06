@@ -41,6 +41,7 @@ public class Monster : Unit
             {
                 DrawAndActivateNewActionCard();
             }
+            //Do nothing if card still acting
         }
         else 
             DrawAndActivateNewActionCard();

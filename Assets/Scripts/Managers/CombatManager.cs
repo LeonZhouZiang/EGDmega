@@ -124,7 +124,7 @@ public class CombatManager : IManager
                     return false;
             }
         }
-        //not found, need new card
+        //last action used already, need new card
         return true;
     }
 
@@ -136,6 +136,11 @@ public class CombatManager : IManager
     public void WaitingForDice()
     {
         GameManager.Instance.diceSystem.ReceiveAction(currentExecutingAction);
+    }
+
+    public void WaitingForPart()
+    {
+        GameManager.Instance.uiManager.ShowMonsterBodyParts();
     }
 
     public void Activate(MonsterActionCard actionCard)
@@ -165,7 +170,17 @@ public class CombatManager : IManager
             }
         }
     }
+
     public void FindNearestSurvivor(Monster monster)
+    {
+
+    }
+
+    public void HitCheck(int diceValue)
+    {
+
+    }
+    public void StrengthCheck(int diceValue)
     {
 
     }

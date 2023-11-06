@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField]
+    [HideInInspector]
     public string unitName;
     [HideInInspector]
     public Vector3 worldPostition;

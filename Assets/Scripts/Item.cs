@@ -7,7 +7,6 @@ public class Item
 {
     public string type;
     public string name;
-    public int id;
     public SingleAction[] actions;
 
     public Sprite image;
