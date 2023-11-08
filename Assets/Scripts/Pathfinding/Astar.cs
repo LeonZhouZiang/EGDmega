@@ -133,6 +133,7 @@ public class Astar : IManager
             path.Add(currentNode);
             currentNode = currentNode.parent;
         }
+        path.Reverse();
         return path.ToArray();
     }
 

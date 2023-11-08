@@ -51,7 +51,7 @@ public class UIManager : IManager
         Debug.Log("Show player info");
         survivorInfoPanel.gameObject.SetActive(true);
         survivorInfoPanel.survivorName.text = survivor.name;
-        survivorInfoPanel.weaponSlot.sprite = survivor.items.image;
+        survivorInfoPanel.weaponSlot.sprite = survivor.weapon.image;
 
         CameraManager.Instance.MoveToTarget(survivor.transform.position);
     }

@@ -41,7 +41,7 @@ public class DiceSystem : IManager
     }
 
     public void ConfirmRoll()
-    {
+    { 
         CurrentWaitingAction.Invoke(currentValue);
 
         diceCamera.gameObject.SetActive(false);

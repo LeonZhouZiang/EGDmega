@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterActionCard
+public class MonsterActionCard : MonoBehaviour
 {
     [HideInInspector]
     public string cardName;

@@ -41,7 +41,12 @@ public class Monster : Unit
             {
                 DrawAndActivateNewActionCard();
             }
-            //Do nothing if card still acting
+            //End turn if card still acting
+            else
+            {
+                Debug.Log("Preparing for next action");
+                GameManager.Instance.combatManager.EndCurrentTurn();
+            }
         }
         else 
             DrawAndActivateNewActionCard();
@@ -62,6 +67,15 @@ public class Monster : Unit
         return currentActionCard; // Return the drawn card
     }
 
+    public void TakeDamage(int value)
+    {
+
+    }
+
+    public void React(int value, MonsterPartition partition)
+    {
+        
+    }
 
     public Stack<MonsterActionCard> ShuffleCards()
     {
@@ -104,14 +118,14 @@ public class MonsterInfo
     [Header("Combat info")]
     public int totalHealth;
     public int deathThreshold;
-    public Partition lethalPartition = null;
-    public List<Partition> partitions;
+    public MonsterPartition lethalPartition = null;
+    public List<MonsterPartition> partitions;
     public int toughness = 0;
     public int basicMove;
 }
 
 [System.Serializable]
-public class Partition
+public class MonsterPartition
 {
     public string partitionName;
     public int health;

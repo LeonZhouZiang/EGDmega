@@ -16,11 +16,11 @@ MonoBehaviour:
   phaseList:
   - prepareTime: 0
     actions:
-    - actionName: 
-      actionType: 0
-      selectionType: 0
+    - actionName: base attack
+      actionType: 1
+      selectionType: 1
       Range: []
-    - actionName: 
+    - actionName: base attack
       actionType: 1
       selectionType: 1
       Range: []

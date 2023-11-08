@@ -14,7 +14,7 @@ public class Survivor : Unit
     public SurvivorInfo survivorInfo;
 
     //only 1 waepon at this time
-    public Item items;
+    public Item weapon;
 
     public int str;
     public int dex;

@@ -5,17 +5,20 @@ using UnityEngine;
 [System.Serializable]
 public class SingleAction
 {
+    private Unit owner;
     public string actionName;
     public enum ActionType { MOVE, ATTACK}
-    public enum TargetType {GRID, UNIT }
+    public enum AttackType {GRID, DIRECTION}
 
     public ActionType actionType;
-    public TargetType selectionType;
+    public AttackType selectionType;
 
-    //aoe range
+    //aoe(direction) range
     public Vector3[] Range = { Vector3.zero };
 
-    public Effect effect;
+    public IEffect effect;
+
+    public Unit Owner { get => owner; set => owner = value; }
 }
 
 
