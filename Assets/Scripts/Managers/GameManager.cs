@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public CameraManager cameraManager;
 
     public CombatManager combatManager = new();
     public UIManager uiManager = new();
@@ -35,25 +38,27 @@ public class GameManager : MonoBehaviour
         mySystems.Add(diceSystem);
         mySystems.Add(astar);
         RegisterSystems();
-        
+        cameraManager.Initialize();
+
         PostAwakesHandler.Invoke();
     }
-
     private void RegisterSystems()
     {
-        
-
         foreach (var manager in mySystems)
         {
-            Debug.Log(manager.GetType().Name + " registered!");
-
             PostAwakesHandler += manager.PostAwake;
             PreUpdatesHandler += manager.PreUpdate;
             PostUpdatesHandler += manager.PostUpdate;
         }
     }
-    private void Start()
+
+    public void Start()
     {
+    }
+
+    public void EndGame()
+    {
+        SceneManager.LoadScene(0);
     }
 
     void Update()

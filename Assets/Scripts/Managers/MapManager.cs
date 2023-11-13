@@ -68,7 +68,8 @@ public class MapManager : IManager
                 gridsArray[i, j] = g;
                 Node node = new Node(true, pos, j, i, normalColor);
                 GameManager.Instance.astar.Nodes[j, i] = node;
-                GameManager.Instance.astar.NodesDict.Add(pos, node);
+                Vector3Int modPos = new Vector3Int((int)(pos.x * 100), 5, (int)(pos.z * 100));
+                GameManager.Instance.astar.NodesDict.Add(modPos, node);
 
             }
         }

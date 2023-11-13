@@ -25,7 +25,7 @@ public class DiceSystem : IManager
     }
 
 
-    public void ReceiveAction(Action<int> action)
+    public void RequireAction(Action<int> action)
     {
         CurrentWaitingAction = action;
         ShowDice();

@@ -5,10 +5,10 @@ using UnityEngine;
 public class Monster : Unit
 {
     [SerializeField]
-    private int MonsterId;
 
     private Sprite image;
-    private MonsterInfo monsterInfo = new();
+    public MonsterInfo monsterInfo = new();
+    public string partToBeHit;
 
     public int totalHealth;
     public string monsterName;
@@ -17,25 +17,31 @@ public class Monster : Unit
     public Stack<MonsterActionCard> shuffledDeck;
     public MonsterActionCard currentActionCard;
 
+    public Dictionary<string, MonsterPartition> bodyParts;
     public MonsterInfo Info { get => monsterInfo; set => monsterInfo = value; }
 
     private void Awake()
     {
+        shuffledDeck = new();
         totalHealth = monsterInfo.totalHealth;
         monsterName = monsterInfo.monsterName;
-        ShuffleCard();
+        bodyParts = monsterInfo.partitions;
     }
 
-    void Update()
+    public void TakeDamage(string partName, int value)
     {
-        
+        bodyParts[partName].health -= value;
+        if (bodyParts[partName].health <= 0)
+        {
+            bodyParts[partName].health = 0;
+            GameManager.Instance.EndGame();
+        }
     }
 
     public void CheckCurrentActionCard()
     {
         //check if current card is completed
-
-        if(currentActionCard != null)
+        if (currentActionCard != null)
         {
             if (GameManager.Instance.combatManager.CheckCardComplete(currentActionCard))
             {
@@ -56,29 +62,31 @@ public class Monster : Unit
     {
         if (shuffledDeck.Count == 0)
         {
-           ShuffleCard();
+            ShuffleCard();
         }
 
         currentActionCard = shuffledDeck.Pop();
+        Debug.Log(currentActionCard == null);
+        Debug.Log("get new card from deck,remaining" + shuffledDeck.Count.ToString());
+        GameManager.Instance.uiManager.UpdateDeckCount(); // Update UI
 
-        GameManager.Instance.uiManager.ShuffleCards(); // Update UI
         GameManager.Instance.combatManager.Activate(currentActionCard); // Activate the card
 
         return currentActionCard; // Return the drawn card
     }
 
-    public void TakeDamage(int value)
-    {
 
-    }
-
-    public void React(int value, MonsterPartition partition)
+    public void React(int value, string partition)
     {
         
     }
 
     public Stack<MonsterActionCard> ShuffleCards()
     {
+        foreach(var card in actionCardsDeck)
+        {
+            card.Initialize();
+        }
         // 创建一个列表来保存牌堆中的牌
         List<MonsterActionCard> cardsList = new List<MonsterActionCard>(actionCardsDeck);
         
@@ -104,6 +112,7 @@ public class Monster : Unit
     }
     public void ShuffleCard()
     {
+        Debug.Log("Shuffle cards");
         shuffledDeck = ShuffleCards();
     }
 
@@ -119,7 +128,7 @@ public class MonsterInfo
     public int totalHealth;
     public int deathThreshold;
     public MonsterPartition lethalPartition = null;
-    public List<MonsterPartition> partitions;
+    public Dictionary<string, MonsterPartition> partitions;
     public int toughness = 0;
     public int basicMove;
 }

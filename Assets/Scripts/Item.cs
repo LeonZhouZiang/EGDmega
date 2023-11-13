@@ -6,10 +6,9 @@ using UnityEngine;
 public class Item
 {
     public string name;
-    public SingleAction[] actions;
-
-    public int dexOffset;
-    public int strOffset;
+    public int attackRange;
+    public int dexRequirement;
+    public int strRequirement;
 
     public Sprite image;
 }

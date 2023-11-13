@@ -2427,12 +2427,14 @@ MonoBehaviour:
     selectionType: 0
     Range:
     - {x: 0, y: 0, z: 0}
+    effect: {fileID: 0}
   basicAttack:
     actionName: 
     actionType: 0
     selectionType: 0
     Range:
     - {x: 0, y: 0, z: 0}
+    effect: {fileID: 0}
   survivorInfo:
     name: Sha Long
     str: 0
@@ -2445,6 +2447,7 @@ MonoBehaviour:
     image: {fileID: 0}
   str: 0
   dex: 0
+  waitingDamage: 0
 --- !u!1 &563906859
 GameObject:
   m_ObjectHideFlags: 0

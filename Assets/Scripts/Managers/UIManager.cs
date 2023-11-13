@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,22 +9,25 @@ using UnityEngine.UI;
 [System.Serializable]
 public class UIManager : IManager
 {
+    [Header("Game Info")]
     public TextMeshProUGUI stateText;
-
+    public TextMeshProUGUI ownerText;
 
     [Header("Survivor info")]
     public SurvivorInfoPanel survivorInfoPanel;
-    public GameObject survivorActionPanle;
+    public GameObject survivorActionPanel;
+    public Button playerAttackBtn;
+    public Button playerMoveBtn;
+    public Button endTurnBtn;
     //public SpriteRenderer survivorItem;
 
     [Header("Monster info")]
 
-    public GameObject monsterInfoPanel;
+    public MonsterTextInfo monsterInfo;
     public GameObject monsterDesk;
-    public TextMeshProUGUI monsterInfo;
+    public BodyPartGraph monsterBodyPartPanel;
     public TextMeshProUGUI deckCountText;
     public Monster monster;
-    public GameObject monsterBodyPartPanel;
 
     public GameObject reticle;
     [Header("Dice")]
@@ -32,6 +36,7 @@ public class UIManager : IManager
     public TextMeshProUGUI diceValueText;
     public override void PostAwake()
     {
+        endTurnBtn.onClick.AddListener(() => { GameManager.Instance.combatManager.EndCurrentTurn(); });
     }
     
 
@@ -40,45 +45,56 @@ public class UIManager : IManager
         diceValueText.gameObject.SetActive(true);
         diceValueText.text = "Roll Result: " + value.ToString();
     }
+
+    public void UpdateOwnerText(string turnOwner)
+    {
+        ownerText.text = turnOwner + "'s turn";
+    }
     public void HideDiceText()
     {
         diceValueText.gameObject.SetActive(false); 
     }
 
     //显示角色属性
-    public void ShowSurvivorInfo(Survivor survivor)
-    {
-        Debug.Log("Show player info");
-        survivorInfoPanel.gameObject.SetActive(true);
-        survivorInfoPanel.survivorName.text = survivor.name;
-        survivorInfoPanel.weaponSlot.sprite = survivor.weapon.image;
 
-        CameraManager.Instance.MoveToTarget(survivor.transform.position);
+
+    public async Task ShowSurvivorInfo(Survivor survivor)
+    {
+        survivorInfoPanel.gameObject.SetActive(true);
+        survivorInfoPanel.UpdateInfo(survivor);
+
+        await CameraManager.Instance.MoveToTarget(survivor.transform.position);
     }
-    public void HideSurvivorInfo()
+    public async Task HideSurvivorInfo()
     {
         survivorInfoPanel.gameObject.SetActive(false);
-        CameraManager.Instance.ResetPosition();
+        await CameraManager.Instance.ResetPosition();
     }
     //显示角色属性 + 行动
     public void ShowSurvivorActionPanel(Survivor survivor)
     {
+        survivorActionPanel.SetActive(true);
+        playerMoveBtn.onClick.RemoveAllListeners();
+        playerAttackBtn.onClick.RemoveAllListeners();
+        playerAttackBtn.onClick.AddListener(survivor.RequireAttack);
+        playerMoveBtn.onClick.AddListener(survivor.RequireMove);
+
         ShowSurvivorInfo(survivor);
-        survivorActionPanle.SetActive(true);
     }
     //monster
-    public void ShowMonsterInfo(Monster monster)
+    public async Task ShowMonsterInfo(Monster monster)
     {
-        monsterInfoPanel.SetActive(true);
+        
         monsterDesk.SetActive(true);
-
-        CameraManager.Instance.MoveToTarget(monster.transform.position);
+        monsterInfo.gameObject.SetActive(true);
+        monsterInfo.UpdateInfo(monster);
+        await CameraManager.Instance.MoveToTarget(monster.transform.position);
     }
-    public void HideMonsterInfo()
+    public async Task HideMonsterInfo()
     {
-        monsterInfoPanel.SetActive(false);
+        monsterInfo.gameObject.SetActive(false);
         monsterDesk.SetActive(false);
-        CameraManager.Instance.ResetPosition();
+        await CameraManager.Instance.ResetPosition();
     }
 
     public void UpdateStateText(string content)
@@ -86,17 +102,17 @@ public class UIManager : IManager
         stateText.text = content;
     }
 
-   internal void ShuffleCards()
+   internal void UpdateDeckCount()
     {
         // Check if the deckCountText or monster reference is null before trying to access them
         if (deckCountText == null)
         {
-            Debug.LogError("deckCountText is not set on the UIManager.");
+            Debug.LogWarning("deckCountText is not set on the UIManager.");
             return;
         }
         if (monster == null || monster.shuffledDeck == null)
         {
-            Debug.LogError("Monster or shuffledDeck is not initialized.");
+            Debug.LogWarning("Monster or shuffledDeck is not initialized.");
             return;
         } 
 
@@ -120,9 +136,10 @@ public class UIManager : IManager
         reticle.SetActive(false);
     }
 
-    internal void ShowMonsterBodyParts()
+    internal void ShowMonsterBodyParts(Survivor s)
     {
-
+        monsterBodyPartPanel.currentSurvivor = s;
+        monsterBodyPartPanel.gameObject.SetActive(true);
     }
 
     //public void SetMonsterTarget(GameObject target)

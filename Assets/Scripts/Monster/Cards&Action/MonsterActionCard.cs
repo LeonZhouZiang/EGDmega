@@ -26,7 +26,7 @@ public class MonsterActionCard : MonoBehaviour
 
         actionBar = new(phaseList);
 
-        lastAction = phaseList[~1].actions[~1];
+        lastAction = phaseList[^1].actions[^1];
     }
 }
 
@@ -52,12 +52,12 @@ public class ActionBar
 }
 
 
-[CreateAssetMenu(menuName = "MonsterActionCardInfo")]
-public class MonsterActionCardInfo : ScriptableObject
+//[CreateAssetMenu(menuName = "MonsterActionCardInfo")]
+[System.Serializable]
+public class MonsterActionCardInfo// : ScriptableObject
 {
     public string cardName;
     public List<Phase> phaseList = new();
-    public GameObject currentAction;
     public Sprite image;
     public ActionBar actionBar;
 }

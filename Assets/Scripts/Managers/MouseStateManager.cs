@@ -13,9 +13,10 @@ public class MouseStateManager : IManager
     public enum State{ UNIT, GRID, MOVE, CARD, NORMAL }
     public static State state = State.NORMAL;
 
-    public static Action<Unit> MonsterCallback;
-    public static Action<Node> GridCallback;
-    public static Action<Node[]> MoveCallback;
+    public Action<List<Vector3>> MoveCallback; 
+    public Action<Monster> MonsterCallback;
+    [HideInInspector]
+    public bool allowedToClick;
 
     private Vector2 startPos;
     private int range;
@@ -35,41 +36,41 @@ public class MouseStateManager : IManager
 
     public void TrySelectGrid(Ray ray)
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            CleanState();
-            GameManager.Instance.mapManager.HideCheckerBoard();
-        }
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    CleanState();
+        //    GameManager.Instance.mapManager.HideCheckerBoard();
+        //}
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Grid")))
-        {
-            if (hit.collider.CompareTag("Grid"))
-            {
-                //in range
-                if (GameManager.Instance.astar.GetDistanceBetweenWorldPos(hit.transform.position, sender.worldPostition) < range)
-                {
-                    Node g = GameManager.Instance.astar.NodeFromWorldPosition(hit.collider.transform.position);
-                    GameManager.Instance.mapManager.UpdateHoverColor(g);
-                    //click to select
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        GridCallback.Invoke(g);
-                        CleanState();
-                        GameManager.Instance.mapManager.HideCheckerBoard();
-                    }
-                }
-                //out range
-                else
-                {
-                    GameManager.Instance.mapManager.ResetColor();
-                }
-            }
-            //not hit
-            else
-            {
-                GameManager.Instance.mapManager.ResetColor();
-            }
-        }
+        //if (Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Grid")))
+        //{
+        //    if (hit.collider.CompareTag("Grid"))
+        //    {
+        //        //in range
+        //        if (GameManager.Instance.astar.GetDistanceBetweenWorldPos(hit.transform.position, sender.worldPostition) < range)
+        //        {
+        //            Node g = GameManager.Instance.astar.NodeFromWorldPosition(hit.collider.transform.position);
+        //            GameManager.Instance.mapManager.UpdateHoverColor(g);
+        //            //click to select
+        //            if (Input.GetMouseButtonDown(0))
+        //            {
+        //                GridCallback.Invoke(g);
+        //                CleanState();
+        //                GameManager.Instance.mapManager.HideCheckerBoard();
+        //            }
+        //        }
+        //        //out range
+        //        else
+        //        {
+        //            GameManager.Instance.mapManager.ResetColor();
+        //        }
+        //    }
+        //    //not hit
+        //    else
+        //    {
+        //        GameManager.Instance.mapManager.ResetColor();
+        //    }
+        //}
         
     }
 
@@ -92,7 +93,13 @@ public class MouseStateManager : IManager
                 //click to select & reachable
                 if (Input.GetMouseButtonDown(0) && path.Length != 0)
                 {
-                    MoveCallback.Invoke(path);
+                    List<Vector3> pathList = new();
+                    foreach(var node in path)
+                    {
+                        pathList.Add(node.worldPosition);
+                    }
+
+                    MoveCallback.Invoke(pathList);
                     CleanState();
                 }
             }
@@ -230,28 +237,28 @@ public class MouseStateManager : IManager
         }
     }
 
-    public void RequireMove(Unit sender, Vector2 start, int distance, Action<Node[]> moveCallback)
+    public void RequireMove(Unit sender, Vector2 start, int distance, Action<List<Vector3>> moveCallback)
     {
         range = distance;
         startPos = start;
-        this.sender = sender;
         MoveCallback = moveCallback;
+        this.sender = sender;
         state = State.MOVE;
 
         GameManager.Instance.mapManager.ShowCheckerBoard();
         GameManager.Instance.uiManager.UpdateStateText("Select a grid");
     }
-    public void RequireGrid(Unit sender, int distance, Action<Node> gridCallback)
-    {
-        range = distance;
-        GridCallback = gridCallback;
-        this.sender = sender;
-        state = State.GRID;
+    //public void RequireGrid(Survivor sender, int distance, Action<Node> gridCallback)
+    //{
+    //    range = distance;
+    //    GridCallback = gridCallback;
+    //    this.sender = sender;
+    //    state = State.GRID;
 
-        GameManager.Instance.mapManager.ShowCheckerBoard();
-        GameManager.Instance.uiManager.UpdateStateText("Select a grid");
-    }
-    public void RequireUnit(Unit sender, int distance, Action<Unit> unitCallback)
+    //    GameManager.Instance.mapManager.ShowCheckerBoard();
+    //    GameManager.Instance.uiManager.UpdateStateText("Select a grid");
+    //}
+    public void RequireAttack(Survivor sender, int distance, Action<Monster> unitCallback)
     {
         range = distance;
         MonsterCallback = unitCallback;

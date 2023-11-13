@@ -9,11 +9,11 @@ public class Astar : IManager
     public Node targetNode;
 
     private Node[,] nodes;
-    private Dictionary<Vector3, Node> nodesDict = new();
+    private Dictionary<Vector3Int, Node> nodesDict = new();
     private MapManager map;
 
     public Node[,] Nodes { get => nodes; set => nodes = value; }
-    public Dictionary<Vector3, Node> NodesDict => nodesDict;
+    public Dictionary<Vector3Int, Node> NodesDict => nodesDict;
 
     public override void PostAwake()
     {
@@ -22,12 +22,15 @@ public class Astar : IManager
 
     public Node NodeFromWorldPosition(Vector2 position)
     {
-        Vector3 pos = new Vector3(position.x, 0, position.y);
+        Vector3Int pos = new Vector3Int((int)(position.x * 100), 5, (int)(100 * position.y));
+        if (!nodesDict.ContainsKey(pos)) Debug.LogError("Invalid unit position");
         return nodesDict[pos];
     }
     public Node NodeFromWorldPosition(Vector3 position)
     {
-        return nodesDict[position];
+        Vector3Int pos = new Vector3Int((int)(position.x * 100), 5, (int)(100 * position.z));
+        if (!nodesDict.ContainsKey(pos)) Debug.LogError("Invalid unit position");
+        return nodesDict[pos];
     }
 
 
@@ -77,15 +80,14 @@ public class Astar : IManager
             if (currentNode == targetNode)
             {
                 //result found check steps
-                Node[] path = Retrace(startNode, targetNode);
-                if (path.Length > steps) path = new Node[0];
+                Node[] path = Retrace(startNode, targetNode, steps);
                 return path;
             }
 
             //find neighbors
             foreach (Node neighbor in GetNeighbors(currentNode))
             {
-                if (!neighbor.walkable || closedList.Contains(neighbor) || GetDistanceBetweenNodes(startNode,neighbor) > steps)
+                if (!neighbor.walkable || closedList.Contains(neighbor))
                 {
                     continue;
                 }
@@ -123,15 +125,17 @@ public class Astar : IManager
         int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
         return dstX + dstY;
     }
-    private Node[] Retrace(Node start, Node end)
+    private Node[] Retrace(Node start, Node end, int steps)
     {
         List<Node> path = new List<Node>();
         Node currentNode = end;
 
-        while (currentNode != start)
+        int i = 0;
+        while (currentNode != start && i <= steps)
         {
             path.Add(currentNode);
             currentNode = currentNode.parent;
+            i++;
         }
         path.Reverse();
         return path.ToArray();

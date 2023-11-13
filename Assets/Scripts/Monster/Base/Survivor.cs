@@ -9,21 +9,33 @@ public class Survivor : Unit
     public string survivorName;
 
     public Dictionary<string, HumanBodyPart> bodyParts;
-    public SingleAction basicMove;
-    public SingleAction basicAttack;
+    
+
     public SurvivorInfo survivorInfo;
 
     //only 1 waepon at this time
     public Item weapon;
 
+    [HideInInspector]
+    public int moveDistance;
+    [HideInInspector]
+    public int attackRange;
+    [HideInInspector]
+    public bool canMove;
+    [HideInInspector]
+    public bool canAttack;
+    [HideInInspector]
     public int str;
+    [HideInInspector]
     public int dex;
 
+    public string aimmingPartition; 
     public void Start()
     {
         survivorName = survivorInfo.name;
         str = survivorInfo.str;
         dex = survivorInfo.dex;
+        attackRange = weapon.attackRange;
         bodyParts = new();
         bodyParts.Add("Head", new HumanBodyPart("Head", 2));
         bodyParts.Add("Body", new HumanBodyPart("Body", 2));
@@ -42,9 +54,80 @@ public class Survivor : Unit
         }
     }
 
+    public int waitingDamage;
+    public void ChooseInjurePart(int value)
+    {
+        if(value == 1) TakeDamage("Head", waitingDamage);
+        if (value == 2) TakeDamage("Body", waitingDamage);
+        if (value == 3 || value == 4) TakeDamage("Hands", waitingDamage);
+        if (value == 5 || value == 6) TakeDamage("Legs", waitingDamage);
+        GameManager.Instance.combatManager.DoMonsterInstanceActionsRecursively();
+    }
+
+
+    public void RequireAttack()
+    {
+        if(canAttack)
+            GameManager.Instance.mouseStateManager.RequireAttack(this, attackRange, SelectBodyPart);
+    }
+    public void RequireMove()
+    {
+        if(canMove)
+            GameManager.Instance.mouseStateManager.RequireMove(this, transform.position, attackRange, Move);
+    }
+
+    public void SelectBodyPart(Monster monster)
+    {
+        GameManager.Instance.uiManager.ShowMonsterBodyParts(this);
+    }
+
+    public void Move(List<Vector3> path)
+    {
+        canMove = false;
+        MovePath(path);
+    }
+
+    public void MonsterEvadeCheck(int diceValue)
+    {
+        canAttack = false;
+        if (diceValue == 6)
+        {
+            GameManager.Instance.combatManager.monster.GetComponent<Monster>().React(diceValue, aimmingPartition);
+            GameManager.Instance.diceSystem.RequireAction(StrengthCheck);
+            GameManager.Instance.uiManager.UpdateStateText("Strength Check");
+        }
+        else
+        {
+            if (diceValue + dex >= weapon.dexRequirement)
+            {
+                GameManager.Instance.combatManager.monster.GetComponent<Monster>().React(diceValue, aimmingPartition);
+            }
+            else
+                Debug.Log("Too small");
+        }
+    }
+
+    public void StrengthCheck(int diceValue)
+    {
+        if (diceValue == 6)
+        {
+
+        }
+        else
+        {
+            if (diceValue + str <= weapon.strRequirement)
+            {
+
+            }
+            else
+                Debug.Log("too small");
+        }
+    }
+
+    
     public void DeathCheck()
     {
-
+        
     }
 }
 
