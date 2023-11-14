@@ -52,7 +52,7 @@ public class CameraManager : MonoBehaviour
 
     private IEnumerator MoveTo(Vector3 target)
     {
-        while(Vector3.SqrMagnitude(mainCamera.transform.position - positionOffset - target) > 0.02f)
+        while(Vector3.SqrMagnitude(mainCamera.transform.position - positionOffset - target) > 0.001f)
         {
             Vector3 newPosition = Vector3.Lerp(mainCamera.transform.position, target + positionOffset, Time.deltaTime * speed);
             Quaternion newRotation = Quaternion.Lerp(mainCamera.transform.rotation, rotationOffset, Time.deltaTime * speed);
@@ -66,7 +66,7 @@ public class CameraManager : MonoBehaviour
 
     private IEnumerator ResetPos()
     {
-        while (Vector3.SqrMagnitude(mainCamera.transform.position - startPos) > 0.02f)
+        while (Vector3.SqrMagnitude(mainCamera.transform.position - startPos) > 0.001f)
         {
             mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, startPos, Time.deltaTime * speed);
             mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, startRotation, Time.deltaTime * speed);
@@ -79,7 +79,7 @@ public class CameraManager : MonoBehaviour
     private IEnumerator CenterTo(Vector3 target)
     {
         Vector3 targetPos = new Vector3(target.x, 0, target.z) + startPos;
-        while (Vector3.SqrMagnitude(mainCamera.transform.position - targetPos) > 0.02f)
+        while (Vector3.SqrMagnitude(mainCamera.transform.position - targetPos) > 0.001f)
         {
             Vector3 newPosition = Vector3.Lerp(mainCamera.transform.position, target + positionOffset, Time.deltaTime * speed);
             Quaternion newRotation = Quaternion.Lerp(mainCamera.transform.rotation, rotationOffset, Time.deltaTime * speed);

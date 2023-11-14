@@ -27,7 +27,6 @@ public class SingleAction
 
     public async Task ActionEffects()
     {
-        Debug.Log(123);
         await (effect as IEffect).ActionEffect();
     }
 }

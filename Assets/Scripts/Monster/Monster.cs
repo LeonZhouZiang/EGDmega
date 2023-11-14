@@ -17,8 +17,9 @@ public class Monster : Unit
     public int totalHealth;
     [HideInInspector]
     public string monsterName;
-
+    [Header("other")]
     public TextMeshProUGUI stateText;
+    public GameObject stateBackground;
 
     public MonsterActionCard[] actionCardsDeck;
     public Stack<MonsterActionCard> shuffledDeck;
@@ -66,12 +67,15 @@ public class Monster : Unit
             DrawAndActivateNewActionCard();
     }
 
-    internal async Task ShowStateText(string content)
+    internal async Task ShowStateText(string content, int ms = 1500)
     {
+        stateBackground.SetActive(true);
+        stateBackground.GetComponent<RectTransform>().sizeDelta = new(0.5f * content.Length, 1);
         stateText.gameObject.SetActive(true);
         stateText.text = content;
-        await Task.Delay(1500);
+        await Task.Delay(ms);
         stateText.gameObject.SetActive(false);
+        stateBackground.SetActive(false);
     }
 
     public MonsterActionCard DrawAndActivateNewActionCard()

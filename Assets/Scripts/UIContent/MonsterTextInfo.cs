@@ -15,7 +15,7 @@ public class MonsterTextInfo : MonoBehaviour
     
     public void UpdateInfo(Monster monster)
     {
-        totalHealth.text = monster.totalHealth.ToString();
+        totalHealth.text = "Total health: " + monster.totalHealth.ToString();
         headHealth.text = monster.bodyParts["Head"].health.ToString();
         bodyHealth.text = monster.bodyParts["Head"].health.ToString();
         clawHealth.text = monster.bodyParts["Head"].health.ToString();

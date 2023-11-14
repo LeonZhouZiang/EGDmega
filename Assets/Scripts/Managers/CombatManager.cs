@@ -142,10 +142,13 @@ public class CombatManager : IManager
 
         if(turnOwner.CompareTag("Player"))
         {
+            turnOwner.GetComponent<Survivor>().canAttack = true;
+            turnOwner.GetComponent<Survivor>().canMove = true;
             GameManager.Instance.uiManager.ShowSurvivorActionPanel(turnOwner.GetComponent<Survivor>());
         }
         else
         {
+            GameManager.Instance.uiManager.HideSurvivorActionPanel();
             GameManager.Instance.uiManager.ShowMonsterInfo(turnOwner.GetComponent<Monster>());
             //GameManager.Instance.uiManager.survivorInfoPanel.gameObject.SetActive(false);
             monster.GetComponent<Monster>().CheckCurrentActionCard();

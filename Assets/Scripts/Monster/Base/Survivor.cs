@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Survivor : Unit
@@ -30,12 +31,15 @@ public class Survivor : Unit
     public int dex;
 
     public string aimmingPartition; 
-    public void Start()
+    public override void Start()
     {
+        base.Start();
         survivorName = survivorInfo.name;
+        moveDistance = survivorInfo.moveDistance;
         str = survivorInfo.str;
         dex = survivorInfo.dex;
         attackRange = weapon.attackRange;
+
         bodyParts = new();
         bodyParts.Add("Head", new HumanBodyPart("Head", 2));
         bodyParts.Add("Body", new HumanBodyPart("Body", 2));
@@ -73,7 +77,7 @@ public class Survivor : Unit
     public void RequireMove()
     {
         if(canMove)
-            GameManager.Instance.mouseStateManager.RequireMove(this, transform.position, attackRange, Move);
+            GameManager.Instance.mouseStateManager.RequireMove(this, moveDistance, Move);
     }
 
     public void SelectBodyPart(Monster monster)
@@ -84,6 +88,7 @@ public class Survivor : Unit
     public void Move(List<Vector3> path)
     {
         canMove = false;
+        GameManager.Instance.uiManager.playerMoveBtn.interactable = false;
         MovePath(path);
     }
 
@@ -152,4 +157,5 @@ public class SurvivorInfo
     public string name;
     public int str;
     public int dex;
+    public int moveDistance;
 }

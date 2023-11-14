@@ -36,7 +36,7 @@ public class UIManager : IManager
     public TextMeshProUGUI diceValueText;
     public override void PostAwake()
     {
-        endTurnBtn.onClick.AddListener(() => { GameManager.Instance.combatManager.EndCurrentTurn(); });
+        endTurnBtn.onClick.AddListener(() => { GameManager.Instance.combatManager.EndCurrentTurn(); Debug.Log(11); });
     }
     
 
@@ -74,6 +74,9 @@ public class UIManager : IManager
     public void ShowSurvivorActionPanel(Survivor survivor)
     {
         survivorActionPanel.SetActive(true);
+        GameManager.Instance.uiManager.playerMoveBtn.interactable = true;
+        GameManager.Instance.uiManager.playerAttackBtn.interactable = true;
+
         playerMoveBtn.onClick.RemoveAllListeners();
         playerAttackBtn.onClick.RemoveAllListeners();
         playerAttackBtn.onClick.AddListener(survivor.RequireAttack);
@@ -81,6 +84,11 @@ public class UIManager : IManager
 
         ShowSurvivorInfo(survivor);
     }
+    public void HideSurvivorActionPanel()
+    {
+        survivorActionPanel.SetActive(false);
+    }
+
     //monster
     public async Task ShowMonsterInfo(Monster monster)
     {

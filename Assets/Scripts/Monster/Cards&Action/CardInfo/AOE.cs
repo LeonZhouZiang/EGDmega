@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class AOE : MonsterAttackEffect
 {
-    public override bool GetTargets(Vector3[] range)
+    public override async Task GetTargets(Vector3[] range)
     {
+        await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Finding target");
         Vector3[] myRange = new Vector3[range.Length];
         //Get nearest player by default
         Vector3 target = Vector3.zero;
@@ -15,27 +16,31 @@ public class AOE : MonsterAttackEffect
             //apply aoe area
             for (int i = 0; i < range.Length; i++)
             {
-                myRange[i] = target + range[i];
+                myRange[i] = target + range[i] * GameManager.Instance.mapManager.Scale;
             }
 
             targets = GameManager.Instance.combatManager.GetSurvivorsInRange(myRange);
-            return true;
-        }
-        //outta range
-        else
-        {
-            return false;
         }
     }
 
     public override async Task ActionEffect()
     {
+        await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Taking action!");
         if (targets.Count != 0)
             GameManager.Instance.combatManager.SetupHitQueue(targets, damage);
         else
+        {
+
             if (GameManager.Instance.combatManager.isPreActionPhase)
-            GameManager.Instance.combatManager.DoActionInQueueRecursively();
-        else
-            GameManager.Instance.combatManager.DoMonsterInstanceActionsRecursively();
+            {
+                await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("No target found.");
+                GameManager.Instance.combatManager.DoActionInQueueRecursively();
+            }
+            else
+            {
+                await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("No target found.");
+                GameManager.Instance.combatManager.DoMonsterInstanceActionsRecursively();
+            }
+        }
     }
 }

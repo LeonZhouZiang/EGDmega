@@ -53,29 +53,29 @@ public class MapManager : IManager
     public void GenerateMap()
     {
         checkerBoard = new GameObject("GridMap");
-        gridsArray = new GameObject[widthCount, heightCount];
+        gridsArray = new GameObject[heightCount, widthCount];
         GameManager.Instance.astar.Nodes = new Node[heightCount, widthCount];
 
-        for (int i = 0; i < widthCount; i++)
+        for (int i = 0; i < heightCount; i++)
         {
-            for (int j = 0; j < heightCount; j++)
+            for (int j = 0; j < widthCount; j++)
             {
                 GameObject g = Object.Instantiate(grid);
-                Vector3 pos = new((i + 0.5f - widthCount / 2f) * scale  , 0.05f, (j - heightCount / 2f + 0.5f) * scale);
+                Vector3 pos = new((j + 0.5f - widthCount / 2f) * scale  , 0.05f, (i - heightCount / 2f + 0.5f) * scale);
                 g.transform.position = pos;
                 g.transform.SetParent(checkerBoard.transform);
                 g.transform.localScale *= gridSize;
 
                 gridsArray[i, j] = g;
                 Node node = new Node(true, pos, j, i, normalColor);
-                GameManager.Instance.astar.Nodes[j, i] = node;
+                GameManager.Instance.astar.Nodes[i, j] = node;
                 Vector3Int modPos = new Vector3Int((int)(pos.x * 100), 5, (int)(pos.z * 100));
                 GameManager.Instance.astar.NodesDict.Add(modPos, node);
 
             }
         }
 
-        //checkerBoard.SetActive(false);
+        checkerBoard.SetActive(false);
     }
 
     public void ShowCheckerBoard()
@@ -85,28 +85,30 @@ public class MapManager : IManager
         {
             if (node.walkable)
             {
-                gridsArray[node.gridX, node.gridY].SetActive(true);
+                gridsArray[node.gridY, node.gridX].SetActive(true);
             }
         }
     }
 
+    //color------
     public void HideCheckerBoard()
     {
+        GameManager.Instance.mapManager.ResetColor();
         foreach (var node in GameManager.Instance.astar.Nodes)
         {
-            gridsArray[node.gridX, node.gridY].SetActive(false);
+            gridsArray[node.gridY, node.gridX].SetActive(false);
         }
         checkerBoard.SetActive(false);
     }
 
-    public void UpdatePathColor(Node[] nodes, Node hoverNode)
+    public void UpdatePathColor(Node[] nodes)
     {
         foreach(var node in nodes)
         {
             gridsArray[node.gridY, node.gridX].GetComponent<MeshRenderer>().material.color = pathColor;
         }
-
-        UpdateHoverColor(hoverNode);
+        if(nodes.Length > 0)
+            UpdateHoverColor(nodes[^1]);
     }
 
     public void UpdateHoverColor(Node node)
@@ -124,12 +126,16 @@ public class MapManager : IManager
 
     public void UpdateRangeColor(Vector3 position, int range)
     {
+        GameManager.Instance.mapManager.ShowCheckerBoard();
+
         Node origin = GameManager.Instance.astar.NodeFromWorldPosition(position);
         for(int i = -range; i < range + 1; i++)
         {
             for(int j = -(range - Mathf.Abs(i)); j < range - Mathf.Abs(i) + 1; j++)
             {
-                gridsArray[i + origin.gridX, j + origin.gridY].GetComponent<MeshRenderer>().material.color = rangeColor;
+                //check if out of bound
+                if(i + origin.gridX < GridsArray.GetLength(0) && j + origin.gridY < GridsArray.GetLength(1))
+                    gridsArray[i + origin.gridX, j + origin.gridY].GetComponent<MeshRenderer>().material.color = rangeColor;
             }
         }
     }

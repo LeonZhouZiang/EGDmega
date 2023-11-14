@@ -66,6 +66,7 @@ public class Astar : IManager
 
         while (openList.Count > 0)
         {
+            //find best node
             Node currentNode = openList[0];
             for (int i = 1; i < openList.Count; i++)
             {
@@ -87,28 +88,30 @@ public class Astar : IManager
             //find neighbors
             foreach (Node neighbor in GetNeighbors(currentNode))
             {
-                if (!neighbor.walkable || closedList.Contains(neighbor))
+                if ((!neighbor.walkable && neighbor != targetNode)|| closedList.Contains(neighbor))
                 {
                     continue;
                 }
-
-                //get distance
-                int newMovementCostToNeighbor = currentNode.gCost + GetDistanceBetweenNodes(currentNode, neighbor);
-                if (newMovementCostToNeighbor < neighbor.gCost || !openList.Contains(neighbor))
+                else
                 {
-                    neighbor.gCost = newMovementCostToNeighbor;
-                    neighbor.hCost = GetDistanceBetweenNodes(neighbor, targetNode);
-                    neighbor.parent = currentNode;
-
-                    if (!openList.Contains(neighbor))
+                    //get distance
+                    int newMovementCostToNeighbor = currentNode.gCost + 1;//GetDistanceBetweenNodes(currentNode, neighbor);
+                    if (newMovementCostToNeighbor < neighbor.gCost || !openList.Contains(neighbor))
                     {
-                        openList.Add(neighbor);
-                        //map.GridsArray[neighbor.gridX, neighbor.gridY].GetComponent<SpriteRenderer>().color = Color.yellow;
+                        neighbor.gCost = newMovementCostToNeighbor;
+                        neighbor.hCost = GetDistanceBetweenNodes(neighbor, targetNode);
+                        neighbor.parent = currentNode;
+
+                        if (!openList.Contains(neighbor))
+                        {
+                            openList.Add(neighbor);
+                        }
                     }
                 }
+
             }
         }
-        return new Node[0];
+        return null;
     }
 
     public int GetDistanceBetweenNodes(Node nodeA, Node nodeB)
@@ -129,16 +132,21 @@ public class Astar : IManager
     {
         List<Node> path = new List<Node>();
         Node currentNode = end;
-
-        int i = 0;
-        while (currentNode != start && i < steps)
+        while (currentNode != start)
         {
-            path.Add(currentNode);
+            if (currentNode.walkable)
+                path.Add(currentNode);
             currentNode = currentNode.parent;
-            i++;
         }
         path.Reverse();
-        return path.ToArray();
+
+        List<Node> result = new();
+        steps = Mathf.Min(steps, path.Count);
+        for(int i = 0; i < steps; i++)
+        {
+            result.Add(path[i]);
+        }
+        return result.ToArray();
     }
 
     public List<Node> GetNeighbors(Node node)
@@ -155,7 +163,7 @@ public class Astar : IManager
 
                 if (checkX >= 0 && checkX < nodes.GetLength(0) && checkY >= 0 && checkY < nodes.GetLength(1))
                 {
-                    neighbors.Add(nodes[checkX, checkY]);
+                    neighbors.Add(nodes[checkY, checkX]);
                 }
             }
         }
@@ -168,7 +176,7 @@ public class Astar : IManager
 public class Node
 {
     public bool walkable;
-    public Vector2 worldPosition;
+    private Vector2 worldPosition;
     public int gridX;
     public int gridY;
 
@@ -177,6 +185,8 @@ public class Node
     public Node parent;
 
     public Color color;
+
+    public Vector3 WorldPosition { get => new Vector3(worldPosition.x, 0, worldPosition.y); set => worldPosition = value; }
     public Node(bool walkable, Vector3 position, int gridX, int gridY, Color color)
     {
         this.walkable = walkable;

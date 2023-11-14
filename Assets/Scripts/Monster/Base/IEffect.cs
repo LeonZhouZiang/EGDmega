@@ -6,7 +6,7 @@ using UnityEngine;
 public interface IEffect
 {
     public abstract Task ActionEffect();
-    public abstract bool GetTargets(Vector3[] range);
+    public abstract Task GetTargets(Vector3[] range);
 }
 
 /// <summary>
@@ -22,8 +22,9 @@ public abstract class MonsterAttackEffect : MonoBehaviour, IEffect
     public int searchRange = 1;
     public List<Survivor> Targets => targets;
 
-    public virtual bool GetTargets(Vector3[] range)
+    public virtual async Task GetTargets(Vector3[] range)
     {
+        await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Finding target");
         Vector3[] myRange = new Vector3[range.Length];
         //Get nearest player by default
         Vector3 target = Vector3.zero;
@@ -36,18 +37,12 @@ public abstract class MonsterAttackEffect : MonoBehaviour, IEffect
             }
         
             targets = GameManager.Instance.combatManager.GetSurvivorsInRange(myRange);
-            return true;
-        }
-        //outta range
-        else
-        {
-            
-            return false;
         }
     }
 
     public virtual async Task ActionEffect()
     {
+        await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Taking action!");
         Debug.Log("Effect start");
         if (targets.Count != 0 )
             GameManager.Instance.combatManager.SetupHitQueue(targets, damage);
@@ -69,15 +64,16 @@ public abstract class MonsterMoveEffect : MonoBehaviour, IEffect
 {
     public string description;
     public int moveStep = -1;
-    private List<Vector3> pathway;
+    private List<Vector3> pathway = new();
 
     /// <summary>
     /// Get nearest player
     /// </summary>
     /// <param name="range"></param>
     /// <returns></returns>
-    public bool GetTargets(Vector3[] range)
+    public async Task GetTargets(Vector3[] range)
     {
+        await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Finding target.");
         Monster monster = GameManager.Instance.combatManager.monster.GetComponent<Monster>();
         if (moveStep == -1) Debug.LogWarning("Not setup");
 
@@ -86,9 +82,8 @@ public abstract class MonsterMoveEffect : MonoBehaviour, IEffect
         Node[] path = GameManager.Instance.astar.TryFindPath(monster.transform.position, target, moveStep);
         foreach(var node in path)
         {
-            pathway.Add(node.worldPosition);
+            pathway.Add(node.WorldPosition);
         }
-        return path.Length != 0;
     }
 
     /// <summary>
@@ -96,13 +91,20 @@ public abstract class MonsterMoveEffect : MonoBehaviour, IEffect
     /// </summary>
     public virtual async Task ActionEffect()
     {
-        Debug.Log("Effect start");
+        await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Taking action!");
         if (pathway.Count != 0)
         {
-            GameManager.Instance.combatManager.monster.GetComponent<Unit>().MovePath(pathway);
+            await GameManager.Instance.combatManager.monster.GetComponent<Unit>().MovePath(pathway);
+            
+            if (GameManager.Instance.combatManager.isPreActionPhase)
+                GameManager.Instance.combatManager.DoActionInQueueRecursively();
+            else
+                GameManager.Instance.combatManager.DoMonsterInstanceActionsRecursively();
+            
         }
         else
         {
+            await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("No target found.");
             Debug.Log("no available target, next act");
             if (GameManager.Instance.combatManager.isPreActionPhase)
                 GameManager.Instance.combatManager.DoActionInQueueRecursively();

@@ -15,6 +15,7 @@ public class BodyPartGraph : MonoBehaviour
 
     public void AttackHead()
     {
+        GameManager.Instance.uiManager.playerAttackBtn.interactable = false;
         GameManager.Instance.combatManager.monster.GetComponent<Monster>().partToBeHit = "Head";
         GameManager.Instance.uiManager.UpdateStateText("Hit Check");
         GameManager.Instance.diceSystem.RequireAction(currentSurvivor.MonsterEvadeCheck);
@@ -22,6 +23,7 @@ public class BodyPartGraph : MonoBehaviour
 
     public void AttackBody()
     {
+        GameManager.Instance.uiManager.playerAttackBtn.interactable = false;
         GameManager.Instance.combatManager.monster.GetComponent<Monster>().partToBeHit = "Body";
         GameManager.Instance.uiManager.UpdateStateText("Hit Check");
         GameManager.Instance.diceSystem.RequireAction(currentSurvivor.MonsterEvadeCheck);
@@ -29,6 +31,7 @@ public class BodyPartGraph : MonoBehaviour
 
     public void AttackArms()
     {
+        GameManager.Instance.uiManager.playerAttackBtn.interactable = false;
         GameManager.Instance.combatManager.monster.GetComponent<Monster>().partToBeHit = "Claws";
         GameManager.Instance.uiManager.UpdateStateText("Hit Check");
         GameManager.Instance.diceSystem.RequireAction(currentSurvivor.MonsterEvadeCheck);
@@ -36,6 +39,7 @@ public class BodyPartGraph : MonoBehaviour
 
     public void AttackLegs()
     {
+        GameManager.Instance.uiManager.playerAttackBtn.interactable = false;
         GameManager.Instance.combatManager.monster.GetComponent<Monster>().partToBeHit = "Legs";
         GameManager.Instance.uiManager.UpdateStateText("Hit Check");
         GameManager.Instance.diceSystem.RequireAction(currentSurvivor.MonsterEvadeCheck);
