@@ -20,6 +20,7 @@ public class CoroutineHelper : MonoBehaviour
 
     public async Task NewTurnAnimation()
     {
+        GameManager.Instance.mouseStateManager.allowedToClick = false;
         originalPosition = new Vector3(0, 600, 0);
         banner.transform.position = originalPosition;
 
@@ -27,6 +28,7 @@ public class CoroutineHelper : MonoBehaviour
         StartCoroutine(MoveBanner());
         await completionSource.Task;
         await Task.Delay(1000);
+        GameManager.Instance.mouseStateManager.allowedToClick = true;
     }
 
 

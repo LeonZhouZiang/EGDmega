@@ -54,12 +54,12 @@ public class Unit : MonoBehaviour
         GameManager.Instance.mapManager.ShowCheckerBoard();
 
         int i = 0;
-        while (Vector3.SqrMagnitude(transform.position - path[^1]) > 0.01f)
+        while (Vector3.SqrMagnitude(transform.position - path[^1]) > 0.001f)
         {
             Vector3 newPosition = Vector3.Lerp(transform.position, target, Time.deltaTime * 10);
             transform.position = newPosition;
             //reached tmp
-            if(Vector3.SqrMagnitude(transform.position - target) < 0.01f)
+            if(Vector3.SqrMagnitude(transform.position - target) < 0.001f)
             {
                 i++;
                 if(i < path.Count)target = path[i];

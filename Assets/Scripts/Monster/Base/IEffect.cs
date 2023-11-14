@@ -76,9 +76,10 @@ public abstract class MonsterMoveEffect : MonoBehaviour, IEffect
         await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Finding target.");
         Monster monster = GameManager.Instance.combatManager.monster.GetComponent<Monster>();
         if (moveStep == -1) Debug.LogWarning("Not setup");
-
+        //set up path
         Vector3 target; 
         GameManager.Instance.combatManager.GetNearestPlayerPos(99,out target);
+        pathway.Clear();
         Node[] path = GameManager.Instance.astar.TryFindPath(monster.transform.position, target, moveStep);
         foreach(var node in path)
         {
@@ -95,7 +96,7 @@ public abstract class MonsterMoveEffect : MonoBehaviour, IEffect
         if (pathway.Count != 0)
         {
             await GameManager.Instance.combatManager.monster.GetComponent<Unit>().MovePath(pathway);
-            
+            Debug.Log("Move done");
             if (GameManager.Instance.combatManager.isPreActionPhase)
                 GameManager.Instance.combatManager.DoActionInQueueRecursively();
             else

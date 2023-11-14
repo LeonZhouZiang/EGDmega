@@ -29,7 +29,13 @@ public class Astar : IManager
     public Node NodeFromWorldPosition(Vector3 position)
     {
         Vector3Int pos = new Vector3Int((int)(position.x * 100), 5, (int)(100 * position.z));
-        if (!nodesDict.ContainsKey(pos)) Debug.LogError("Invalid unit position");
+        //outta bound
+        if (!nodesDict.ContainsKey(pos))
+        {
+            Debug.LogWarning("Invalid unit position");
+            return null;
+        }
+
         return nodesDict[pos];
     }
 
@@ -40,7 +46,7 @@ public class Astar : IManager
         {
             for (int j = 0; j < nodes.GetLength(1); j++)
             {
-                map.GridsArray[i, j].GetComponent<SpriteRenderer>().color = nodes[i, j].color;
+                map.GridsArray[i, j].GetComponent<MeshRenderer>().material.color = nodes[i, j].color;
             }
         }
     }

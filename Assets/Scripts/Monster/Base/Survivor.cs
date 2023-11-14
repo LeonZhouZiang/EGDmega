@@ -30,7 +30,10 @@ public class Survivor : Unit
     [HideInInspector]
     public int dex;
 
-    public string aimmingPartition; 
+    [HideInInspector]
+    public string aimmingPartition;
+    [HideInInspector]
+    public int waitingDamage;
     public override void Start()
     {
         base.Start();
@@ -58,7 +61,7 @@ public class Survivor : Unit
         }
     }
 
-    public int waitingDamage;
+
     public void ChooseInjurePart(int value)
     {
         if(value == 1) TakeDamage("Head", waitingDamage);
@@ -71,12 +74,12 @@ public class Survivor : Unit
 
     public void RequireAttack()
     {
-        if(canAttack)
+        if(canAttack && GameManager.Instance.mouseStateManager.allowedToClick)
             GameManager.Instance.mouseStateManager.RequireAttack(this, attackRange, SelectBodyPart);
     }
     public void RequireMove()
     {
-        if(canMove)
+        if(canMove && GameManager.Instance.mouseStateManager.allowedToClick)
             GameManager.Instance.mouseStateManager.RequireMove(this, moveDistance, Move);
     }
 
@@ -120,7 +123,7 @@ public class Survivor : Unit
         }
         else
         {
-            if (diceValue + str <= weapon.strRequirement)
+            if (diceValue + str <= weapon.strOffset)
             {
 
             }

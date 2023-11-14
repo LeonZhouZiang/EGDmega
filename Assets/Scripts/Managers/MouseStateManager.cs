@@ -131,7 +131,7 @@ public class MouseStateManager : IManager
             if (hit.collider.CompareTag("Monster"))
             {
                 //in range
-                if (GameManager.Instance.astar.GetDistanceBetweenWorldPos(hit.transform.position, sender.transform.position) < range)
+                if (GameManager.Instance.astar.GetDistanceBetweenWorldPos(hit.transform.position, sender.transform.position) <= range)
                 {
                     //select target
                     if (Input.GetMouseButtonDown(0))
@@ -141,15 +141,19 @@ public class MouseStateManager : IManager
                         CleanState();
                     }
                     //only hover
-                    else { GameManager.Instance.uiManager.SetReticle(hit.transform.position, 0.5f, hit.transform.localScale.x); }
+                    else { GameManager.Instance.uiManager.SetReticle(hit.transform.position, hit.transform.localScale.x); }
                 }
-                
+                //not in range
+                else GameManager.Instance.uiManager.CleanReticle();
+
             }
             else
-            {
+            {   //not unit
                 GameManager.Instance.uiManager.CleanReticle();
             }
         }
+        //not hit
+        else GameManager.Instance.uiManager.CleanReticle();
     }
 
     public void TryGetUnitInfo(Ray ray)
@@ -177,11 +181,11 @@ public class MouseStateManager : IManager
             }
             else if (hit.collider.CompareTag("Player"))
             {
-                Debug.Log(123);
                 GameManager.Instance.mapManager.UpdateUnitHover(hit.collider.gameObject);
 
                 if (allowedToClick && Input.GetMouseButtonDown(0))
                 {
+                    CameraManager.Instance.MoveToTarget(hit.transform.position);
                     GameManager.Instance.uiManager.ShowSurvivorInfo(hit.collider.gameObject.GetComponent<Survivor>());
                 }
             }
@@ -199,10 +203,11 @@ public class MouseStateManager : IManager
 
     }
 
-    private void CleanState()
+    public void CleanState()
     {
         GameManager.Instance.uiManager.UpdateStateText("");
         GameManager.Instance.uiManager.CleanReticle();
+        GameManager.Instance.astar.ResetColor();
         GameManager.Instance.mapManager.HideCheckerBoard();
         CameraManager.Instance.ResetPosition();
         state = State.NORMAL;
@@ -250,6 +255,7 @@ public class MouseStateManager : IManager
         state = State.MOVE;
 
         GameManager.Instance.mapManager.ShowCheckerBoard();
+        GameManager.Instance.astar.ResetColor();
         GameManager.Instance.uiManager.UpdateStateText("Select a grid");
     }
     //public void RequireGrid(Survivor sender, int distance, Action<Node> gridCallback)
@@ -264,13 +270,13 @@ public class MouseStateManager : IManager
     //}
     public void RequireAttack(Survivor sender, int distance, Action<Monster> unitCallback)
     {
-        GameManager.Instance.mapManager.ShowCheckerBoard();
-
         range = distance;
         MonsterCallback = unitCallback;
         this.sender = sender;
         state = State.UNIT;
 
+        GameManager.Instance.mapManager.ShowCheckerBoard();
+        GameManager.Instance.astar.ResetColor();
         GameManager.Instance.uiManager.UpdateStateText("Select a target");
     }
 

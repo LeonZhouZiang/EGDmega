@@ -20,9 +20,9 @@ public class SingleAction
     public MonoBehaviour effect;
     public Unit Owner { get => owner; set => owner = value; }
 
-    public void GetTargets()
+    public async Task GetTargets()
     {
-        (effect as IEffect).GetTargets(Range);
+        await (effect as IEffect).GetTargets(Range);
     }
 
     public async Task ActionEffects()

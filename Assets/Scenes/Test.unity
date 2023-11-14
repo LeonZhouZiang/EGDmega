@@ -1258,7 +1258,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &200863011
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1298,7 +1298,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Select a target
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2683,7 +2683,7 @@ GameObject:
   - component: {fileID: 383304261}
   - component: {fileID: 383304263}
   m_Layer: 8
-  m_Name: Player2
+  m_Name: Survivor range
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2707,14 +2707,14 @@ MonoBehaviour:
   survivorName: 
   survivorInfo:
     name: Sha Long
-    str: 1
+    str: 0
     dex: 1
     moveDistance: 5
   weapon:
-    name: 
-    attackRange: 0
-    dexRequirement: 0
-    strRequirement: 0
+    name: Bow
+    attackRange: 4
+    dexRequirement: 3
+    strOffset: 0
     image: {fileID: 0}
   moveDistance: 0
   attackRange: 0
@@ -4032,7 +4032,7 @@ GameObject:
   - component: {fileID: 548382062}
   - component: {fileID: 548382063}
   m_Layer: 8
-  m_Name: Player
+  m_Name: Survivor melee
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4074,13 +4074,13 @@ MonoBehaviour:
   survivorInfo:
     name: test
     str: 1
-    dex: 1
+    dex: 0
     moveDistance: 5
   weapon:
-    name: 
-    attackRange: 0
-    dexRequirement: 0
-    strRequirement: 0
+    name: Sword
+    attackRange: 1
+    dexRequirement: 3
+    strOffset: 0
     image: {fileID: 0}
   moveDistance: 0
   attackRange: 0
@@ -5125,13 +5125,13 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_NormalColor: {r: 0.08627451, g: 0.08627451, b: 0.08627451, a: 1}
+    m_HighlightedColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+    m_PressedColor: {r: 0.5943396, g: 0.49061054, b: 0.49061054, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5943396, g: 0.1541919, b: 0.1541919, a: 0.59607846}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -5175,7 +5175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.084905684, g: 0.084905684, b: 0.084905684, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5910,7 +5910,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 1000
-  field of view: 60
+  field of view: 50
   orthographic: 0
   orthographic size: 17.61
   m_Depth: 0
@@ -5936,13 +5936,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.30121863, y: -0, z: -0, w: 0.9535551}
-  m_LocalPosition: {x: 0, y: 14.35, z: -10.97}
+  m_LocalRotation: {x: 0.29275793, y: -0, z: -0, w: 0.9561866}
+  m_LocalPosition: {x: 0, y: 11.11, z: -17.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 35.062, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 34.046, y: 0, z: 0}
 --- !u!1 &988373063
 GameObject:
   m_ObjectHideFlags: 0
@@ -5985,7 +5985,7 @@ MonoBehaviour:
   uiManager:
     stateText: {fileID: 200863012}
     ownerText: {fileID: 647182164}
-    survivorInfoPanel: {fileID: 0}
+    survivorInfoPanel: {fileID: 1356905956}
     survivorActionPanel: {fileID: 1613774095}
     playerAttackBtn: {fileID: 1619969436}
     playerMoveBtn: {fileID: 1813374441}
@@ -6004,8 +6004,8 @@ MonoBehaviour:
   mapManager:
     widthCount: 14
     heightCount: 14
-    scale: 1
-    gridSize: 1
+    scale: 1.5
+    gridSize: 1.5
     grid: {fileID: 4221984664189432363, guid: 432da4843e3342445909a00b2031e754, type: 3}
     normalColor: {r: 0.69803923, g: 0.69803923, b: 0.69803923, a: 0.29803923}
     pathColor: {r: 0.117566854, g: 0.6886792, b: 0.10070309, a: 0.6}
@@ -6946,10 +6946,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentSurvivor: {fileID: 0}
   monster: {fileID: 0}
-  HeadBtn: {fileID: 0}
-  BodyBtn: {fileID: 0}
-  ArmsBtn: {fileID: 0}
-  LegsBtn: {fileID: 0}
+  HeadBtn: {fileID: 740398313}
+  BodyBtn: {fileID: 1248271894}
+  ClawBtn: {fileID: 1229774497}
+  LegsBtn: {fileID: 2078725817}
 --- !u!1001 &1170720453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7526,13 +7526,13 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_NormalColor: {r: 0.08627451, g: 0.08627451, b: 0.08627451, a: 1}
+    m_HighlightedColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+    m_PressedColor: {r: 0.5943396, g: 0.49061054, b: 0.49061054, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5943396, g: 0.1541919, b: 0.1541919, a: 0.59607846}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -7576,7 +7576,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.084905684, g: 0.084905684, b: 0.084905684, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7673,13 +7673,13 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_NormalColor: {r: 0.08627451, g: 0.08627451, b: 0.08627451, a: 1}
+    m_HighlightedColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+    m_PressedColor: {r: 0.5943396, g: 0.49061054, b: 0.49061054, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5943396, g: 0.1541919, b: 0.1541919, a: 0.59607846}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -7723,7 +7723,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.084905684, g: 0.084905684, b: 0.084905684, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8481,6 +8481,7 @@ MonoBehaviour:
   stateBackground: {fileID: 1923599133}
   actionCardsDeck:
   - {fileID: 362097688}
+  - {fileID: 195872076}
   currentActionCard: {fileID: 0}
 --- !u!1 &1451024742
 GameObject:
@@ -9003,7 +9004,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1613774096
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9685,14 +9686,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.92941177}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ae52d682631f43e409ef38020ff28b0f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 638fa0ceb7209bc4780a5fcefabec2e4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -11062,11 +11063,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_NormalColor: {r: 0.08627451, g: 0.08627451, b: 0.08627451, a: 1}
+    m_HighlightedColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+    m_PressedColor: {r: 0.5943396, g: 0.49061054, b: 0.49061054, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5943396, g: 0.1541919, b: 0.1541919, a: 0.59607846}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -11110,7 +11111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.084905684, g: 0.084905684, b: 0.084905684, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

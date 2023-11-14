@@ -5,18 +5,28 @@ using UnityEngine.UI;
 
 public class BodyPartGraph : MonoBehaviour
 {
+    [HideInInspector]
     public Survivor currentSurvivor;
+    [HideInInspector]
     public Monster monster;
 
     public Button HeadBtn;
     public Button BodyBtn;
-    public Button ArmsBtn;
+    public Button ClawBtn;
     public Button LegsBtn;
 
+    public void Awake()
+    {
+        HeadBtn.onClick.AddListener(AttackHead);
+        BodyBtn.onClick.AddListener(AttackBody);
+        ClawBtn.onClick.AddListener(AttackClaw);
+        LegsBtn.onClick.AddListener(AttackLegs);
+    }
     public void AttackHead()
     {
+        currentSurvivor.canAttack = false;
+        monster.partToBeHit = "Head";
         GameManager.Instance.uiManager.playerAttackBtn.interactable = false;
-        GameManager.Instance.combatManager.monster.GetComponent<Monster>().partToBeHit = "Head";
         GameManager.Instance.uiManager.UpdateStateText("Hit Check");
         GameManager.Instance.diceSystem.RequireAction(currentSurvivor.MonsterEvadeCheck);
     }
@@ -29,7 +39,7 @@ public class BodyPartGraph : MonoBehaviour
         GameManager.Instance.diceSystem.RequireAction(currentSurvivor.MonsterEvadeCheck);
     }
 
-    public void AttackArms()
+    public void AttackClaw()
     {
         GameManager.Instance.uiManager.playerAttackBtn.interactable = false;
         GameManager.Instance.combatManager.monster.GetComponent<Monster>().partToBeHit = "Claws";

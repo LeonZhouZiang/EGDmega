@@ -36,7 +36,7 @@ public class UIManager : IManager
     public TextMeshProUGUI diceValueText;
     public override void PostAwake()
     {
-        endTurnBtn.onClick.AddListener(() => { GameManager.Instance.combatManager.EndCurrentTurn(); Debug.Log(11); });
+        endTurnBtn.onClick.AddListener(() => { if(GameManager.Instance.mouseStateManager.allowedToClick) GameManager.Instance.combatManager.EndCurrentTurn();});
     }
     
 
@@ -131,17 +131,21 @@ public class UIManager : IManager
 
 
     //reticle
-    public void SetReticle(Vector2 pos, float height = 0.5f, float scale = 1f)
+    public void SetReticle(Vector3 pos, float height = 0.05f, float scale = 1f)
     {
-        reticle.SetActive(true);
-        Vector3 position = new(pos.x, height, pos.y);
-        reticle.transform.position = position;
-        reticle.transform.localScale = new Vector3(scale, scale, scale);
+        if (!reticle.activeInHierarchy)
+        {
+            reticle.SetActive(true);
+            Vector3 position = new(pos.x, height, pos.z);
+            reticle.transform.position = position;
+            reticle.transform.localScale = new Vector3(scale, scale, scale);
+        }
     }
 
     public void CleanReticle()
     {
-        reticle.SetActive(false);
+        if(reticle.activeInHierarchy)
+            reticle.SetActive(false);
     }
 
     internal void ShowMonsterBodyParts(Survivor s)

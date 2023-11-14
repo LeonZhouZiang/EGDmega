@@ -57,6 +57,8 @@ public class CombatManager : IManager
     
     public async Task EndCurrentTurn()
     {
+        GameManager.Instance.mouseStateManager.CleanState();
+
         var tmp = allUnits.Dequeue();
         allUnits.Enqueue(tmp);
         //set owner
@@ -70,6 +72,8 @@ public class CombatManager : IManager
 
     public void StartNewTurn()
     {
+        GameManager.Instance.uiManager.HideSurvivorInfo();
+        GameManager.Instance.uiManager.HideSurvivorActionPanel();
         Debug.Log(monster.GetComponent<Monster>().shuffledDeck.Count + " cards remaining in deck, Start new unit turn");
         //check setup time 0 cards
         isPreActionPhase = true;
@@ -106,9 +110,8 @@ public class CombatManager : IManager
             SingleAction action = currentActionQueue.Dequeue();
             CameraManager.Instance.MoveToTarget(action.Owner.transform.position);
 
-            action.GetTargets();
-            await (action.effect as IEffect).ActionEffect();
-
+            await action.GetTargets();
+            await action.ActionEffects();
         }
     }
 
@@ -128,7 +131,7 @@ public class CombatManager : IManager
             currentAction = action;
 
             //if has target
-            currentAction.GetTargets();
+            await currentAction.GetTargets();
             await currentAction.ActionEffects();
         }
     }

@@ -8,7 +8,7 @@ public class Item
     public string name;
     public int attackRange;
     public int dexRequirement;
-    public int strRequirement;
+    public int strOffset;
 
     public Sprite image;
 }
