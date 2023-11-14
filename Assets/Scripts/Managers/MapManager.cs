@@ -28,6 +28,7 @@ public class MapManager : IManager
     private GameObject[,] gridsArray;
     private GameObject checkerBoard;
 
+    public float Scale => scale;
     public GameObject CheckerBoard => checkerBoard;
     public GameObject[,] GridsArray { get { return gridsArray; } }
 
@@ -74,7 +75,7 @@ public class MapManager : IManager
             }
         }
 
-        checkerBoard.SetActive(false);
+        //checkerBoard.SetActive(false);
     }
 
     public void ShowCheckerBoard()

@@ -45,7 +45,7 @@ public class Astar : IManager
         }
     }
 
-    public Node[] TryFindPath(Vector2 startPos, Vector2 targetPos, int steps)
+    public Node[] TryFindPath(Vector3 startPos, Vector3 targetPos, int steps)
     {
         startNode = NodeFromWorldPosition(startPos);
         targetNode = NodeFromWorldPosition(targetPos);
@@ -103,7 +103,7 @@ public class Astar : IManager
                     if (!openList.Contains(neighbor))
                     {
                         openList.Add(neighbor);
-                        map.GridsArray[neighbor.gridX, neighbor.gridY].GetComponent<SpriteRenderer>().color = Color.yellow;
+                        //map.GridsArray[neighbor.gridX, neighbor.gridY].GetComponent<SpriteRenderer>().color = Color.yellow;
                     }
                 }
             }
@@ -131,7 +131,7 @@ public class Astar : IManager
         Node currentNode = end;
 
         int i = 0;
-        while (currentNode != start && i <= steps)
+        while (currentNode != start && i < steps)
         {
             path.Add(currentNode);
             currentNode = currentNode.parent;
@@ -177,10 +177,10 @@ public class Node
     public Node parent;
 
     public Color color;
-    public Node(bool walkable, Vector2 position, int gridX, int gridY, Color color)
+    public Node(bool walkable, Vector3 position, int gridX, int gridY, Color color)
     {
         this.walkable = walkable;
-        this.worldPosition = position;
+        this.worldPosition = new Vector2(position.x, position.z);
         this.gridX = gridX;
         this.gridY = gridY;
         this.color = color;

@@ -1064,11 +1064,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ec1df1c1e68d1344a3d1e71ab387ca7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  description: Find the nearest player within a distance of 5, deals 1 damage. Disregard
+    if no target found.
   targets: []
   damage: 1
   searchRange: 1
-  description: Find the nearest player within a distance of 5, deals 1 damage. Disregard
-    if no target found.
 --- !u!1 &200863010
 GameObject:
   m_ObjectHideFlags: 0
@@ -2199,6 +2199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85f5d5e0d77984a409d9b499a7bd50ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  description: 
   moveStep: 5
 --- !u!114 &362097688
 MonoBehaviour:
@@ -2229,7 +2230,7 @@ MonoBehaviour:
     - prepareTime: 0
       actions:
       - owner: {fileID: 1421216775}
-        actionName: attack1
+        actionName: move
         actionType: 0
         selectionType: 0
         Range:
@@ -5224,14 +5225,14 @@ MonoBehaviour:
   uiManager:
     stateText: {fileID: 200863012}
     ownerText: {fileID: 647182164}
-    survivorInfoPanel: {fileID: 1099939777}
-    survivorActionPanel: {fileID: 0}
+    survivorInfoPanel: {fileID: 0}
+    survivorActionPanel: {fileID: 1613774095}
     playerAttackBtn: {fileID: 1619969436}
     playerMoveBtn: {fileID: 1813374441}
     endTurnBtn: {fileID: 1012358476}
     monsterInfo: {fileID: 959672714}
     monsterDesk: {fileID: 456395143}
-    monsterBodyPartPanel: {fileID: 0}
+    monsterBodyPartPanel: {fileID: 1165839621}
     deckCountText: {fileID: 0}
     monster: {fileID: 1421216775}
     reticle: {fileID: 1809288439}
@@ -5254,7 +5255,7 @@ MonoBehaviour:
     diceObject: {fileID: 3656458325622395816, guid: 82494f514e6776e47a154f1f85dca0f6, type: 3}
     DiceCanvas: {fileID: 1222178688}
     diceCamera: {fileID: 1351703892}
-  coroutineHelper: {fileID: 0}
+  coroutineHelper: {fileID: 988373071}
 --- !u!4 &988373069
 Transform:
   m_ObjectHideFlags: 0
@@ -5845,14 +5846,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1099939775}
   - component: {fileID: 1099939776}
-  - component: {fileID: 1099939777}
   m_Layer: 5
-  m_Name: PlayerInfoPanel
+  m_Name: PlayerInfoCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1099939775
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5865,6 +5865,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1613774096}
   - {fileID: 1356905953}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5896,27 +5897,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &1099939777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1099939774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e9720baae7f93f4c8286bef1ba5de19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  survivorName: {fileID: 490426947}
-  headHP: {fileID: 293317490}
-  bodyHP: {fileID: 312461375}
-  armsHP: {fileID: 0}
-  legsHP: {fileID: 0}
-  totalHealth: {fileID: 1839028455}
-  weaponSlot: {fileID: 443495300}
-  actionPanel: {fileID: 1613774095}
-  infoPanel: {fileID: 1356905952}
 --- !u!1 &1164758388
 GameObject:
   m_ObjectHideFlags: 0
@@ -6067,7 +6047,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1165839620
 Transform:
   m_ObjectHideFlags: 0
@@ -7028,13 +7008,14 @@ GameObject:
   - component: {fileID: 1356905953}
   - component: {fileID: 1356905955}
   - component: {fileID: 1356905954}
+  - component: {fileID: 1356905956}
   m_Layer: 5
-  m_Name: PlayerInfo
+  m_Name: PlayerInfoPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1356905953
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7105,6 +7086,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1356905952}
   m_CullTransparentMesh: 1
+--- !u!114 &1356905956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1356905952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e9720baae7f93f4c8286bef1ba5de19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  survivorName: {fileID: 490426947}
+  headHP: {fileID: 293317490}
+  bodyHP: {fileID: 312461375}
+  armsHP: {fileID: 0}
+  legsHP: {fileID: 0}
+  totalHealth: {fileID: 1839028455}
+  weaponSlot: {fileID: 443495300}
+  actionPanel: {fileID: 1613774095}
+  infoPanel: {fileID: 1356905952}
 --- !u!1 &1362688641
 GameObject:
   m_ObjectHideFlags: 0
@@ -7287,25 +7289,22 @@ MonoBehaviour:
   unitName: 
   worldPostition: {x: 0, y: 0, z: 0}
   orientation: {x: 0, y: 0, z: -1}
-  startIndex: {x: 7, y: 10}
+  startIndex: {x: 1, y: 1}
   image: {fileID: 0}
   monsterInfo:
     monsterName: ToughLife
     descrption: 
     isEpic: 0
-    totalHealth: 0
+    totalHealth: 10
     deathThreshold: 0
-    lethalPartition:
-      partitionName: 
-      health: 0
-      rate: 1
-    toughness: 0
-    basicMove: 0
+    lethalPartition: 
+    toughness: 3
+    basicMove: 5
   partToBeHit: 
   totalHealth: 10
   monsterName: Life
+  stateText: {fileID: 0}
   actionCardsDeck:
-  - {fileID: 195872076}
   - {fileID: 362097688}
   currentActionCard: {fileID: 0}
 --- !u!1 &1451024742
@@ -7736,14 +7735,14 @@ GameObject:
   m_Component:
   - component: {fileID: 1613774096}
   - component: {fileID: 1613774098}
-  - component: {fileID: 1613774097}
+  - component: {fileID: 1613774099}
   m_Layer: 5
   m_Name: PlayerActionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1613774096
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7753,7 +7752,7 @@ RectTransform:
   m_GameObject: {fileID: 1613774095}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 708965976}
@@ -7762,43 +7761,13 @@ RectTransform:
   - {fileID: 1619969433}
   - {fileID: 1853298841}
   - {fileID: 1012358475}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1099939775}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -23.104492, y: -423.992}
-  m_SizeDelta: {x: -1459.6665, y: -896.0471}
+  m_AnchoredPosition: {x: -22.47699, y: -414.09613}
+  m_SizeDelta: {x: -1461.6831, y: -889.8132}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1613774097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1613774095}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 0.8862745}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1613774098
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7807,6 +7776,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1613774095}
   m_CullTransparentMesh: 1
+--- !u!114 &1613774099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613774095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 0.9647059}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
 --- !u!1 &1619969432
 GameObject:
   m_ObjectHideFlags: 0
@@ -7940,7 +7936,7 @@ GameObject:
   - component: {fileID: 1641549193}
   - component: {fileID: 1641549192}
   m_Layer: 5
-  m_Name: MainCanvas
+  m_Name: UICanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10335,8 +10331,7 @@ SceneRoots:
   - {fileID: 874139434}
   - {fileID: 17821451}
   - {fileID: 1641549195}
+  - {fileID: 1099939775}
   - {fileID: 1809288443}
   - {fileID: 456395147}
-  - {fileID: 1613774096}
-  - {fileID: 1099939775}
   - {fileID: 774043233}

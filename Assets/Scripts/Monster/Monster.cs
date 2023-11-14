@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 public class Monster : Unit
@@ -8,10 +11,14 @@ public class Monster : Unit
 
     private Sprite image;
     public MonsterInfo monsterInfo = new();
+    [HideInInspector]
     public string partToBeHit;
-
+    [HideInInspector]
     public int totalHealth;
+    [HideInInspector]
     public string monsterName;
+
+    public TextMeshProUGUI stateText;
 
     public MonsterActionCard[] actionCardsDeck;
     public Stack<MonsterActionCard> shuffledDeck;
@@ -45,6 +52,7 @@ public class Monster : Unit
         {
             if (GameManager.Instance.combatManager.CheckCardComplete(currentActionCard))
             {
+                //new new card
                 DrawAndActivateNewActionCard();
             }
             //End turn if card still acting
@@ -58,6 +66,14 @@ public class Monster : Unit
             DrawAndActivateNewActionCard();
     }
 
+    internal async Task ShowStateText(string content)
+    {
+        stateText.gameObject.SetActive(true);
+        stateText.text = content;
+        await Task.Delay(1500);
+        stateText.gameObject.SetActive(false);
+    }
+
     public MonsterActionCard DrawAndActivateNewActionCard()
     {
         if (shuffledDeck.Count == 0)
@@ -66,7 +82,6 @@ public class Monster : Unit
         }
 
         currentActionCard = shuffledDeck.Pop();
-        Debug.Log(currentActionCard == null);
         Debug.Log("get new card from deck,remaining" + shuffledDeck.Count.ToString());
         GameManager.Instance.uiManager.UpdateDeckCount(); // Update UI
 
@@ -127,7 +142,7 @@ public class MonsterInfo
     [Header("Combat info")]
     public int totalHealth;
     public int deathThreshold;
-    public MonsterPartition lethalPartition = null;
+    public string lethalPartition = null;
     public Dictionary<string, MonsterPartition> partitions;
     public int toughness = 0;
     public int basicMove;

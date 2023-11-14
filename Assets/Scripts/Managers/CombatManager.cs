@@ -107,7 +107,7 @@ public class CombatManager : IManager
             CameraManager.Instance.MoveToTarget(action.Owner.transform.position);
 
             action.GetTargets();
-            (action.effect as IEffect).ActionEffect();
+            await (action.effect as IEffect).ActionEffect();
 
         }
     }
@@ -129,7 +129,7 @@ public class CombatManager : IManager
 
             //if has target
             currentAction.GetTargets();
-            (currentAction.effect as IEffect).ActionEffect();
+            await currentAction.ActionEffects();
         }
     }
 
@@ -146,7 +146,8 @@ public class CombatManager : IManager
         }
         else
         {
-            GameManager.Instance.uiManager.survivorInfoPanel.gameObject.SetActive(false);
+            GameManager.Instance.uiManager.ShowMonsterInfo(turnOwner.GetComponent<Monster>());
+            //GameManager.Instance.uiManager.survivorInfoPanel.gameObject.SetActive(false);
             monster.GetComponent<Monster>().CheckCurrentActionCard();
         }
     }

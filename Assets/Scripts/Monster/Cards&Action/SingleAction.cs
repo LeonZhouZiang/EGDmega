@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 [System.Serializable]
@@ -19,9 +20,15 @@ public class SingleAction
     public MonoBehaviour effect;
     public Unit Owner { get => owner; set => owner = value; }
 
-    public bool GetTargets()
+    public void GetTargets()
     {
-        return (effect as IEffect).GetTargets(Range);
+        (effect as IEffect).GetTargets(Range);
+    }
+
+    public async Task ActionEffects()
+    {
+        Debug.Log(123);
+        await (effect as IEffect).ActionEffect();
     }
 }
 

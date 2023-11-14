@@ -15,40 +15,40 @@ public class CoroutineHelper : MonoBehaviour
 
     public void Start()
     {
-        originalPosition = banner.transform.localPosition;
-
-        // Start the coroutine for the banner movement
-        StartCoroutine(MoveBanner());
+        originalPosition = new Vector3(0, 600, 0);
     }
 
-    internal async Task NewTurnAnimation()
+    public async Task NewTurnAnimation()
     {
+        originalPosition = new Vector3(0, 600, 0);
+        banner.transform.position = originalPosition;
+
         completionSource = new();
         StartCoroutine(MoveBanner());
         await completionSource.Task;
-        await Task.Delay(300);
+        await Task.Delay(1000);
     }
+
 
     private IEnumerator MoveBanner()
     {
         // Move the banner down
-        yield return MoveTo(originalPosition - new Vector3(0f, moveDistance, 0f), moveDuration);
+        yield return MoveTo(originalPosition - new Vector3(0f, moveDistance, 0f), originalPosition, moveDuration);
         yield return new WaitForSeconds(0.5f);
         // Move the banner back up to its original position
-        yield return MoveTo(originalPosition, moveDuration);
+        yield return MoveTo(originalPosition, banner.transform.localPosition, moveDuration);
 
         completionSource.SetResult(true);
     }
 
-    private IEnumerator MoveTo(Vector3 targetPosition, float duration)
+    private IEnumerator MoveTo(Vector3 targetPosition, Vector3 currentPosition, float duration)
     {
         float elapsed = 0f;
-        Vector3 startingPosition = banner.transform.localPosition;
 
         while (elapsed < duration)
         {
             // Interpolate the position over time
-            banner.transform.localPosition = Vector3.Lerp(startingPosition, targetPosition, elapsed / duration);
+            banner.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, elapsed / duration);
 
             elapsed += Time.deltaTime;
 

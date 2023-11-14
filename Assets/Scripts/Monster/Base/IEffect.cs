@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public interface IEffect
 {
-    public abstract void ActionEffect();
+    public abstract Task ActionEffect();
     public abstract bool GetTargets(Vector3[] range);
 }
 
@@ -13,6 +14,7 @@ public interface IEffect
 /// </summary>
 public abstract class MonsterAttackEffect : MonoBehaviour, IEffect
 {
+    public string description;
     [HideInInspector]
     public List<Survivor> targets;
 
@@ -30,7 +32,7 @@ public abstract class MonsterAttackEffect : MonoBehaviour, IEffect
             //apply aoe area
             for(int i = 0; i < range.Length; i++)
             {
-                myRange[i] = target + range[i];
+                myRange[i] = target + range[i] * GameManager.Instance.mapManager.Scale;
             }
         
             targets = GameManager.Instance.combatManager.GetSurvivorsInRange(myRange);
@@ -44,13 +46,14 @@ public abstract class MonsterAttackEffect : MonoBehaviour, IEffect
         }
     }
 
-    public virtual void ActionEffect()
+    public virtual async Task ActionEffect()
     {
         Debug.Log("Effect start");
         if (targets.Count != 0 )
             GameManager.Instance.combatManager.SetupHitQueue(targets, damage);
         else
         {
+            await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("No target found.");
             Debug.Log("no available target, next act");
             if (GameManager.Instance.combatManager.isPreActionPhase)
                 GameManager.Instance.combatManager.DoActionInQueueRecursively();
@@ -64,9 +67,7 @@ public abstract class MonsterAttackEffect : MonoBehaviour, IEffect
 
 public abstract class MonsterMoveEffect : MonoBehaviour, IEffect
 {
-    /// <summary>
-    /// should be changed
-    /// </summary>
+    public string description;
     public int moveStep = -1;
     private List<Vector3> pathway;
 
@@ -93,7 +94,7 @@ public abstract class MonsterMoveEffect : MonoBehaviour, IEffect
     /// <summary>
     /// Basic move
     /// </summary>
-    public virtual void ActionEffect()
+    public virtual async Task ActionEffect()
     {
         Debug.Log("Effect start");
         if (pathway.Count != 0)

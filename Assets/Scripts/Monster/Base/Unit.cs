@@ -17,7 +17,7 @@ public class Unit : MonoBehaviour
 
     private void Start()
     {
-        transform.position = GameManager.Instance.mapManager.GridsArray[startIndex.x, startIndex.y].transform.position;
+        transform.position = GameManager.Instance.mapManager.GridsArray[startIndex.y, startIndex.x].transform.position;
     }
 
     public void UpdateLeftRight()
