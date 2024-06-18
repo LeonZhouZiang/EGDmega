@@ -9,7 +9,11 @@ public class DiceFace : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Transform parent = transform.parent;
-        if (parent.position.y > other.ClosestPointOnBounds(parent.position).y)
+        if (transform.position.y < parent.position.y)
+        {
             dice.value = value;
+            
+        }
     }
+
 }

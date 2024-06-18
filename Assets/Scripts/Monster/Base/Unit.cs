@@ -13,30 +13,19 @@ public class Unit : MonoBehaviour
 
     public Vector2Int startGridIndex;
 
+    private bool facing;
     private TaskCompletionSource<bool> completionSource = new TaskCompletionSource<bool>();
     public virtual void Start()
     {
+        facing = GetComponentInChildren<SpriteRenderer>().flipX;
         transform.position = GameManager.Instance.mapManager.GridsArray[startGridIndex.y, startGridIndex.x].transform.position;
         GameManager.Instance.astar.Nodes[startGridIndex.y, startGridIndex.x].walkable = false;
     }
 
-    public void UpdateLeftRight()
+    public void UpdateLeftRight(float xDiff)
     {
-        if(orientation == Vector3.left)
-        {
-
-        }
-        else
-        {
-
-        }
-    }
-    public void SetOrientation(Vector3 dir)
-    {
-        if(dir == Vector3.left || dir == Vector3.right)
-        {
-            orientation = dir;
-        }
+        if (xDiff != 0)
+            GetComponentInChildren<SpriteRenderer>().flipX = xDiff > 0 ? facing : !facing;
     }
 
     public async Task MovePath(List<Vector3> path)
@@ -48,8 +37,10 @@ public class Unit : MonoBehaviour
 
     IEnumerator MoveTo(List<Vector3> path)
     {
-        GameManager.Instance.mouseStateManager.allowedToClick = false;
         Vector3 target = path[0];
+        UpdateLeftRight(target.x - transform.position.x);
+
+        GameManager.Instance.mouseStateManager.allowedToClick = false;
         GameManager.Instance.astar.NodeFromWorldPosition(transform.position).walkable = true;
         GameManager.Instance.mapManager.ShowCheckerBoard();
 
@@ -63,6 +54,8 @@ public class Unit : MonoBehaviour
             {
                 i++;
                 if(i < path.Count)target = path[i];
+                UpdateLeftRight(target.x - transform.position.x);
+
                 CameraManager.Instance.MoveToTarget(target);
                 yield return new WaitForSeconds(0.5f);
             }

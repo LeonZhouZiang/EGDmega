@@ -15,10 +15,10 @@ public class MonsterTextInfo : MonoBehaviour
     
     public void UpdateInfo(Monster monster)
     {
-        totalHealth.text = "Total health: " + monster.totalHealth.ToString();
-        headHealth.text = monster.bodyParts["Head"].health.ToString();
-        bodyHealth.text = monster.bodyParts["Head"].health.ToString();
-        clawHealth.text = monster.bodyParts["Head"].health.ToString();
-        legsHealth.text = monster.bodyParts["Head"].health.ToString();
+        totalHealth.text = "Total health: " + monster.TotalHealth.ToString();
+        headHealth.text = "Head: " + monster.bodyParts["Head"].health.ToString();
+        bodyHealth.text = "Body: " + monster.bodyParts["Body"].health.ToString();
+        clawHealth.text = "Claws: " + monster.bodyParts["Claws"].health.ToString();
+        legsHealth.text = "Legs: " + monster.bodyParts["Legs"].health.ToString();
     }
 }

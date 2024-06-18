@@ -10,43 +10,69 @@ public class Monster : Unit
     [SerializeField]
 
     private Sprite image;
-    public MonsterInfo monsterInfo = new();
+    public MonsterInfo monsterInfo;
     [HideInInspector]
     public string partToBeHit;
     [HideInInspector]
     public int totalHealth;
     [HideInInspector]
-    public string monsterName;
-    [Header("other")]
+    public int toughness;
+    [Header("State ui")]
     public TextMeshProUGUI stateText;
     public GameObject stateBackground;
 
     public MonsterActionCard[] actionCardsDeck;
     public Stack<MonsterActionCard> shuffledDeck;
+
+    [HideInInspector]
     public MonsterActionCard currentActionCard;
 
-    public Dictionary<string, MonsterPartition> bodyParts;
+    public Dictionary<string, MonsterPartition> bodyParts = new();
     public MonsterInfo Info { get => monsterInfo; set => monsterInfo = value; }
+    public int TotalHealth { get => GetTotalHealth(); }
+
+    public BodyPartGraph bodyPartGraph;
 
     private void Awake()
     {
         shuffledDeck = new();
+        toughness = monsterInfo.toughness;
         totalHealth = monsterInfo.totalHealth;
-        monsterName = monsterInfo.monsterName;
-        bodyParts = monsterInfo.partitions;
+        unitName = monsterInfo.monsterName;
+        foreach(var part in monsterInfo.partitions)
+        {
+            bodyParts.Add(part.partitionName, new MonsterPartition(part.partitionName, part.health));
+        }
     }
 
     public void TakeDamage(string partName, int value)
     {
         bodyParts[partName].health -= value;
-        if (bodyParts[partName].health <= 0)
+        GameManager.Instance.uiManager.monsterInfo.UpdateInfo(this);
+
+        if(bodyParts[partName].health <= 0)
         {
+            bodyPartGraph.DisableButton(partName);
             bodyParts[partName].health = 0;
+        }
+        if (GetTotalHealth() < monsterInfo.deathThreshold)
+        {
+            Debug.Log("Monster dies");
             GameManager.Instance.EndGame();
         }
     }
 
-    public void CheckCurrentActionCard()
+    private int GetTotalHealth()
+    {
+        int total = 0;
+        foreach(var entry in bodyParts)
+        {
+            total += entry.Value.health;
+        }
+        return total;
+    }
+
+    public async Task CheckCurrentActionCardAsync()
     {
         //check if current card is completed
         if (currentActionCard != null)
@@ -59,7 +85,7 @@ public class Monster : Unit
             //End turn if card still acting
             else
             {
-                Debug.Log("Preparing for next action");
+                await ShowStateText("Preparing for next action");
                 GameManager.Instance.combatManager.EndCurrentTurn();
             }
         }
@@ -138,25 +164,16 @@ public class Monster : Unit
 }
 
 [System.Serializable]
-public class MonsterInfo
-{
-    public string monsterName;
-    public string descrption;
-    public bool isEpic;
-    [Header("Combat info")]
-    public int totalHealth;
-    public int deathThreshold;
-    public string lethalPartition = null;
-    public Dictionary<string, MonsterPartition> partitions;
-    public int toughness = 0;
-    public int basicMove;
-}
-
-[System.Serializable]
 public class MonsterPartition
 {
     public string partitionName;
     public int health;
     public float rate = 1.0f;
+
+    public MonsterPartition(string partitionName, int health)
+    {
+        this.partitionName = partitionName;
+        this.health = health;
+    }
 }
 

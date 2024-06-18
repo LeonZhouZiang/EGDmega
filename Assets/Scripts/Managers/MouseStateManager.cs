@@ -124,6 +124,7 @@ public class MouseStateManager : IManager
         if (allowedToClick && Input.GetMouseButtonDown(1))
         {
             CleanState();
+            return;
         }
 
         if (Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Unit")))
@@ -134,7 +135,7 @@ public class MouseStateManager : IManager
                 if (GameManager.Instance.astar.GetDistanceBetweenWorldPos(hit.transform.position, sender.transform.position) <= range)
                 {
                     //select target
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetMouseButtonDown(0) && allowedToClick)
                     {
                         var monster = hit.collider.GetComponent<Monster>();
                         MonsterCallback.Invoke(monster);
@@ -161,8 +162,7 @@ public class MouseStateManager : IManager
         if (allowedToClick && Input.GetMouseButtonDown(1))
         {
             CleanState();
-            GameManager.Instance.uiManager.HideMonsterInfo();
-            GameManager.Instance.uiManager.HideSurvivorInfo();
+            GameManager.Instance.uiManager.CloseAllTabs();
             return;
         }
 
@@ -195,7 +195,7 @@ public class MouseStateManager : IManager
 
     public void CardDisplayState(Ray ray)
     {
-        if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+        if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || allowedToClick)
         {
             CleanState();
             return;
@@ -203,13 +203,14 @@ public class MouseStateManager : IManager
 
     }
 
+
     public void CleanState()
     {
         GameManager.Instance.uiManager.UpdateStateText("");
-        GameManager.Instance.uiManager.CleanReticle();
         GameManager.Instance.astar.ResetColor();
         GameManager.Instance.mapManager.HideCheckerBoard();
         CameraManager.Instance.ResetPosition();
+        GameManager.Instance.uiManager.CleanReticle();
         state = State.NORMAL;
     }
 

@@ -134,7 +134,7 @@ public class MapManager : IManager
             for(int j = -(range - Mathf.Abs(i)); j < range - Mathf.Abs(i) + 1; j++)
             {
                 //check if out of bound
-                if(i + origin.gridX < GridsArray.GetLength(1) && j + origin.gridY < GridsArray.GetLength(0))
+                if(0 <= i + origin.gridX && i + origin.gridX < GridsArray.GetLength(1) && 0 <= j + origin.gridY && j + origin.gridY < GridsArray.GetLength(0))
                     gridsArray[j + origin.gridY, i + origin.gridX].GetComponent<MeshRenderer>().material.color = rangeColor;
             }
         }

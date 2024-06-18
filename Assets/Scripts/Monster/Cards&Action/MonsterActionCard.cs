@@ -27,6 +27,15 @@ public class MonsterActionCard : MonoBehaviour
         actionBar = new(phaseList);
 
         lastAction = phaseList[^1].actions[^1];
+
+        //set owners
+        foreach(var phase in phaseList)
+        {
+            for(int i = 0; i < phase.actions.Count; i++)
+            {
+                phase.actions[i].Owner = GameManager.Instance.combatManager.Monster;
+            }
+        }
     }
 }
 
@@ -52,9 +61,8 @@ public class ActionBar
 }
 
 
-//[CreateAssetMenu(menuName = "MonsterActionCardInfo")]
 [System.Serializable]
-public class MonsterActionCardInfo// : ScriptableObject
+public class MonsterActionCardInfo
 {
     public string cardName;
     public List<Phase> phaseList = new();

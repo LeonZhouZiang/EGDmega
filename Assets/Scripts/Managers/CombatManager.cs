@@ -19,7 +19,6 @@ public class CombatManager : IManager
     private Survivor currentTargetPlayer;
     private Queue<Survivor> hitQueue;
 
-    private MonsterPartition partition;
     //all incoming actions
     public List<Queue<SingleAction>> allActionsQueue;
     private Queue<SingleAction> currentActionQueue;
@@ -28,6 +27,10 @@ public class CombatManager : IManager
     [HideInInspector]
     public GameObject turnOwner;
 
+    public Monster Monster
+    {
+        get => monster.GetComponent<Monster>();
+    }
     public override void PostAwake()
     {
         allUnits.Enqueue(monster);
@@ -46,7 +49,6 @@ public class CombatManager : IManager
     public void StartGame()
     {
         turnOwner = monster;
-        GameManager.Instance.uiManager.UpdateOwnerText(turnOwner.name);
         monster.GetComponent<Monster>().ShuffleCard();
         StartNewTurn();
     }
@@ -63,9 +65,9 @@ public class CombatManager : IManager
         allUnits.Enqueue(tmp);
         //set owner
         turnOwner = allUnits.Peek();
-        GameManager.Instance.uiManager.UpdateOwnerText(turnOwner.name);
+        GameManager.Instance.uiManager.UpdateOwnerText(turnOwner.GetComponent<Unit>().unitName);
 
-        CameraManager.Instance.MoveToTarget(turnOwner.transform.position);
+        //CameraManager.Instance.MoveToTarget(turnOwner.transform.position);
         await Task.Delay(TimeSpan.FromSeconds(0.8));
         StartNewTurn();
     }
@@ -92,7 +94,8 @@ public class CombatManager : IManager
         {
             allActionsQueue[i-1] = allActionsQueue[i];
         }
-        allActionsQueue[^1] = new();
+        //allActionsQueue[^1] = new();
+        allActionsQueue.Add(new());
 
         //do all ready actions
         DoActionInQueueRecursively();
@@ -154,7 +157,7 @@ public class CombatManager : IManager
             GameManager.Instance.uiManager.HideSurvivorActionPanel();
             GameManager.Instance.uiManager.ShowMonsterInfo(turnOwner.GetComponent<Monster>());
             //GameManager.Instance.uiManager.survivorInfoPanel.gameObject.SetActive(false);
-            monster.GetComponent<Monster>().CheckCurrentActionCard();
+            monster.GetComponent<Monster>().CheckCurrentActionCardAsync();
         }
     }
 
@@ -204,6 +207,10 @@ public class CombatManager : IManager
 
     //helper
     #region combat functions
+    public void HurtMonster(string partition, int damage)
+    {
+        monster.GetComponent<Monster>().TakeDamage(partition, damage);
+    }
 
     public List<Survivor> GetSurvivorsInRange(Vector3[] range)
     {
@@ -260,26 +267,33 @@ public class CombatManager : IManager
 
     
 
-    public void PlayerEvadeCheck_(int diceValue)
+    public void PlayerEvadeCheck(int diceValue)
     {
         if(diceValue == 6)
         {
-
+            GameManager.Instance.coroutineHelper.ResultSuccess(true);
+            ProcessTargetsOneByOne();
         }
         else
         {
             //not hit
-            if(diceValue <= currentTargetPlayer.survivorInfo.dex)
+            if(diceValue >= 6 - currentTargetPlayer.survivorInfo.dex)
             {
-                Debug.Log("Evaded!");
+                GameManager.Instance.coroutineHelper.ResultSuccess(true);
+                ProcessTargetsOneByOne();
                 //process next
-                ProcessTargetsOneByOne(myDamage);
             }
             else
+            //hit check
             {
+                //show result hint
+                GameManager.Instance.coroutineHelper.ResultSuccess(false);
+
                 currentTargetPlayer.waitingDamage = myDamage;
-                GameManager.Instance.diceSystem.RequireAction(currentTargetPlayer.ChooseInjurePart);
-                
+
+                //show injure explaination
+                GameManager.Instance.diceSystem.UpdateExplanation(0);
+                GameManager.Instance.diceSystem.RequireAction(currentTargetPlayer.PlayerInjure, currentTargetPlayer.survivorName + "'s injured part is...");
             }
         }
     }
@@ -292,15 +306,36 @@ public class CombatManager : IManager
     }
 
     private int myDamage;
-    private async Task ProcessTargetsOneByOne(int damage)
+    public async Task ProcessTargetsOneByOne(int damage)
     {
         myDamage = damage;
         if(hitQueue.Count != 0)
         {
             currentTargetPlayer = hitQueue.Dequeue();
             await CameraManager.Instance.MoveToTarget(currentTargetPlayer.transform.position);
-            GameManager.Instance.uiManager.UpdateStateText(currentTargetPlayer.name + "Evasion check.");
-            GameManager.Instance.diceSystem.RequireAction(PlayerEvadeCheck_);
+            GameManager.Instance.mouseStateManager.CleanState();
+
+            GameManager.Instance.diceSystem.RequireAction(PlayerEvadeCheck, currentTargetPlayer.survivorName + "'s evasion check");
+        }
+        else
+        {
+            Debug.Log("Effect done");
+            if (isPreActionPhase)
+                //check if still has effects
+                DoActionInQueueRecursively();
+            else
+                DoMonsterInstanceActionsRecursively();
+        }
+    }
+    public async Task ProcessTargetsOneByOne()
+    {      
+        if (hitQueue.Count != 0)
+        {
+            currentTargetPlayer = hitQueue.Dequeue();
+            await CameraManager.Instance.MoveToTarget(currentTargetPlayer.transform.position);
+            GameManager.Instance.mouseStateManager.CleanState();
+
+            GameManager.Instance.diceSystem.RequireAction(PlayerEvadeCheck, currentTargetPlayer.survivorName + "'s evasion check");
         }
         else
         {

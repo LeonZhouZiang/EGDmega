@@ -48,3 +48,6 @@ TagManager:
   - name: UI
     uniqueID: 1190662423
     locked: 0
+  - name: Dice
+    uniqueID: 429628325
+    locked: 0

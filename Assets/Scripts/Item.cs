@@ -7,6 +7,7 @@ public class Item
 {
     public string name;
     public int attackRange;
+    public int attackDamage;
     public int dexRequirement;
     public int strOffset;
 

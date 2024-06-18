@@ -16,8 +16,6 @@ public class SurvivorInfoPanel: MonoBehaviour
     public TextMeshProUGUI totalHealth;
     public Image weaponSlot;
 
-    public GameObject actionPanel;
-    public GameObject infoPanel;
 
     public void UpdateInfo(Survivor survivor)
     {

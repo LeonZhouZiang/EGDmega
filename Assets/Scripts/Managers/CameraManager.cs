@@ -28,10 +28,12 @@ public class CameraManager : MonoBehaviour
 
     public async Task MoveToTarget(Vector3 target)
     {
+        GameManager.Instance.mouseStateManager.allowedToClick = false;
         coroutineTask = new TaskCompletionSource<bool>();
         StopAllCoroutines();
         StartCoroutine(MoveTo(target));
         await coroutineTask.Task;
+        GameManager.Instance.mouseStateManager.allowedToClick = true;
     }
 
     public async Task CenterToTarget(Vector3 target)

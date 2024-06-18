@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dice: {fileID: 6110610814037432328}
-  value: 6
+  value: 1
 --- !u!1 &3656458325622395816
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,9 +89,9 @@ GameObject:
   - component: {fileID: 3191727996539457185}
   - component: {fileID: 960027466979857076}
   - component: {fileID: 8760370072200302079}
-  - component: {fileID: 1631158824579894365}
   - component: {fileID: 7392492606828238915}
   - component: {fileID: 6110610814037432328}
+  - component: {fileID: 7231303315105611069}
   m_Layer: 6
   m_Name: Dice
   m_TagString: Untagged
@@ -109,7 +109,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6637903587522760055}
@@ -127,7 +127,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3656458325622395816}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -835688487210165693, guid: f2e4cfce8774dd84bab55b539f3d62dd, type: 3}
 --- !u!23 &8760370072200302079
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -148,7 +148,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b609d80128479b948bbab8f3b7c9af73, type: 2}
+  - {fileID: 6034957751646507721, guid: f2e4cfce8774dd84bab55b539f3d62dd, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -170,27 +170,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1631158824579894365
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3656458325622395816}
-  m_Material: {fileID: 13400000, guid: 59ba2a51aa579e04ca9db077bac871c2, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7392492606828238915
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -199,7 +178,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3656458325622395816}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 8
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -231,9 +210,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 7392492606828238915}
-  inHand: 0
-  height: 1
+  diceCamera: {fileID: 0}
+  height: 2
+  maxVelocityMagnitude: 20
   value: 0
+  isFinished: 0
+--- !u!65 &7231303315105611069
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3656458325622395816}
+  m_Material: {fileID: 13400000, guid: 59ba2a51aa579e04ca9db077bac871c2, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.74999994, y: 0.74999994, z: 0.74999994}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5039807310947684389
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,7 +313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dice: {fileID: 6110610814037432328}
-  value: 3
+  value: 5
 --- !u!1 &5082194981674585883
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,7 +391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dice: {fileID: 6110610814037432328}
-  value: 4
+  value: 6
 --- !u!1 &6894131271991731848
 GameObject:
   m_ObjectHideFlags: 0
@@ -467,7 +469,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dice: {fileID: 6110610814037432328}
-  value: 1
+  value: 4
 --- !u!1 &7916509208269607102
 GameObject:
   m_ObjectHideFlags: 0
@@ -623,4 +625,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dice: {fileID: 6110610814037432328}
-  value: 5
+  value: 3

@@ -6,7 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class SingleAction
 {
-    public Unit owner;
+    private Unit owner;
     public string actionName;
     public enum ActionType { MOVE, ATTACK}
     public enum AttackType {GRID, DIRECTION}

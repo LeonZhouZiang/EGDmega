@@ -2418,35 +2418,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Survivor1
-  worldPostition: {x: 0, y: 0, z: 0}
   orientation: {x: 0, y: 0, z: -1}
+  startGridIndex: {x: 0, y: 0}
   survivorName: 
-  basicMove:
-    actionName: 
-    actionType: 0
-    selectionType: 0
-    Range:
-    - {x: 0, y: 0, z: 0}
-    effect: {fileID: 0}
-  basicAttack:
-    actionName: 
-    actionType: 0
-    selectionType: 0
-    Range:
-    - {x: 0, y: 0, z: 0}
-    effect: {fileID: 0}
   survivorInfo:
     name: Sha Long
     str: 0
     dex: 0
+    moveDistance: 0
   weapon:
     name: 
-    actions: []
-    dexOffset: 0
+    attackRange: 0
+    dexRequirement: 0
     strOffset: 0
     image: {fileID: 0}
+  moveDistance: 0
+  attackRange: 0
+  canMove: 0
+  canAttack: 0
   str: 0
   dex: 0
+  aimmingPartition: 
   waitingDamage: 0
 --- !u!1 &563906859
 GameObject:
@@ -2925,7 +2917,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &669641062
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3611,7 +3603,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec110a37f45685045bf39808342dde7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraManager: {fileID: 0}
   combatManager:
+    isPreActionPhase: 1
     player1: {fileID: 0}
     player2: {fileID: 0}
     monster: {fileID: 0}
@@ -3619,18 +3613,23 @@ MonoBehaviour:
     turnOwner: {fileID: 0}
   uiManager:
     stateText: {fileID: 200863012}
+    ownerText: {fileID: 0}
     survivorInfoPanel: {fileID: 2065352022}
-    survivorActionPanle: {fileID: 0}
-    monsterInfoPanel: {fileID: 1099939774}
-    monsterDesk: {fileID: 456395143}
+    survivorActionPanel: {fileID: 0}
+    playerAttackBtn: {fileID: 0}
+    playerMoveBtn: {fileID: 0}
+    endTurnBtn: {fileID: 0}
     monsterInfo: {fileID: 0}
+    monsterDesk: {fileID: 456395143}
+    monsterBodyPartPanel: {fileID: 0}
     deckCountText: {fileID: 0}
     monster: {fileID: 1421216775}
-    monsterBodyPartPanel: {fileID: 0}
     reticle: {fileID: 0}
     confirmRollBtn: {fileID: 137164115}
     fastRollBtn: {fileID: 2112261488}
     diceValueText: {fileID: 231382622}
+  mouseStateManager:
+    allowedToClick: 0
   mapManager:
     widthCount: 14
     heightCount: 14
@@ -3888,8 +3887,8 @@ MonoBehaviour:
   survivorName: {fileID: 490426947}
   headHP: {fileID: 293317490}
   bodyHP: {fileID: 312461375}
-  handHP: {fileID: 2085422009}
-  legHP: {fileID: 1800641847}
+  armsHP: {fileID: 0}
+  legsHP: {fileID: 0}
   totalHealth: {fileID: 0}
   weaponSlot: {fileID: 443495300}
   actionPanel: {fileID: 0}
@@ -4813,11 +4812,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: 
-  worldPostition: {x: 0, y: 0, z: 0}
   orientation: {x: 0, y: 0, z: -1}
-  MonsterId: 0
+  startGridIndex: {x: 0, y: 0}
+  image: {fileID: 0}
+  monsterInfo:
+    monsterName: 
+    descrption: 
+    isEpic: 0
+    totalHealth: 0
+    deathThreshold: 0
+    lethalPartition: 
+    toughness: 0
+    basicMove: 0
+  partToBeHit: 
   totalHealth: 0
   monsterName: 
+  stateText: {fileID: 0}
+  stateBackground: {fileID: 0}
   actionCardsDeck: []
   currentActionCard: {fileID: 0}
 --- !u!1 &1451024742

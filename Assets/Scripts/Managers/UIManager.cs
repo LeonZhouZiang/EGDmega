@@ -30,29 +30,17 @@ public class UIManager : IManager
     public Monster monster;
 
     public GameObject reticle;
-    [Header("Dice")]
-    public Button confirmRollBtn;
-    public Button fastRollBtn;
-    public TextMeshProUGUI diceValueText;
+    
     public override void PostAwake()
     {
         endTurnBtn.onClick.AddListener(() => { if(GameManager.Instance.mouseStateManager.allowedToClick) GameManager.Instance.combatManager.EndCurrentTurn();});
     }
     
 
-    public void UpdateValueText(int value)
-    {
-        diceValueText.gameObject.SetActive(true);
-        diceValueText.text = "Roll Result: " + value.ToString();
-    }
 
     public void UpdateOwnerText(string turnOwner)
     {
         ownerText.text = turnOwner + "'s turn";
-    }
-    public void HideDiceText()
-    {
-        diceValueText.gameObject.SetActive(false); 
     }
 
     //œ‘ æΩ«…´ Ù–‘
@@ -131,21 +119,27 @@ public class UIManager : IManager
 
 
     //reticle
-    public void SetReticle(Vector3 pos, float height = 0.05f, float scale = 1f)
+    public void SetReticle(Vector3 pos, float height = 0.8f, float scale = 1f)
     {
         if (!reticle.activeInHierarchy)
         {
             reticle.SetActive(true);
             Vector3 position = new(pos.x, height, pos.z);
             reticle.transform.position = position;
-            reticle.transform.localScale = new Vector3(scale, scale, scale);
+            reticle.transform.localScale = new Vector3(2 * scale, 0.5f, 2 * scale);
         }
+    }
+
+    public void CloseAllTabs()
+    {
+        HideMonsterBodyParts();
+        HideMonsterInfo();
+        HideSurvivorInfo();
     }
 
     public void CleanReticle()
     {
-        if(reticle.activeInHierarchy)
-            reticle.SetActive(false);
+        reticle.SetActive(false);
     }
 
     internal void ShowMonsterBodyParts(Survivor s)
@@ -154,13 +148,9 @@ public class UIManager : IManager
         monsterBodyPartPanel.gameObject.SetActive(true);
     }
 
-    //public void SetMonsterTarget(GameObject target)
-    //{
-    //    monsterReticle.SetActive(true);
-    //    monsterReticle.transform.position = target.transform.position;
-    //}
-    //public void CleanMonsterTarget()
-    //{
-    //    monsterReticle.SetActive(false);
-    //}
+    public void HideMonsterBodyParts()
+    {
+        monsterBodyPartPanel.gameObject.SetActive(false);
+    }
+
 }

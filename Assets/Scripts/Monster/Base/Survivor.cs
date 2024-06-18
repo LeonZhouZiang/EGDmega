@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public class Survivor : Unit
@@ -20,8 +18,6 @@ public class Survivor : Unit
     [HideInInspector]
     public int moveDistance;
     [HideInInspector]
-    public int attackRange;
-    [HideInInspector]
     public bool canMove;
     [HideInInspector]
     public bool canAttack;
@@ -37,22 +33,24 @@ public class Survivor : Unit
     public override void Start()
     {
         base.Start();
-        survivorName = survivorInfo.name;
+        survivorName = survivorInfo.survivorName;
+        unitName = survivorName;
         moveDistance = survivorInfo.moveDistance;
         str = survivorInfo.str;
         dex = survivorInfo.dex;
-        attackRange = weapon.attackRange;
 
         bodyParts = new();
-        bodyParts.Add("Head", new HumanBodyPart("Head", 2));
-        bodyParts.Add("Body", new HumanBodyPart("Body", 2));
-        bodyParts.Add("Arms", new HumanBodyPart("Arms", 2));
-        bodyParts.Add("Legs", new HumanBodyPart("Legs", 2));
+        bodyParts.Add("Head", new HumanBodyPart("Head", 3));
+        bodyParts.Add("Body", new HumanBodyPart("Body", 3));
+        bodyParts.Add("Arms", new HumanBodyPart("Arms", 3));
+        bodyParts.Add("Legs", new HumanBodyPart("Legs", 3));
 
     }
 
     public void TakeDamage(string partName, int value)
     {
+        if (!bodyParts.ContainsKey(partName)) Debug.LogError("invalid name");
+
         bodyParts[partName].health -= value;
         if(bodyParts[partName].health < 0)
         {
@@ -62,20 +60,42 @@ public class Survivor : Unit
     }
 
 
-    public void ChooseInjurePart(int value)
+    public void PlayerInjure(int value)
     {
-        if(value == 1) TakeDamage("Head", waitingDamage);
-        if (value == 2) TakeDamage("Body", waitingDamage);
-        if (value == 3 || value == 4) TakeDamage("Hands", waitingDamage);
-        if (value == 5 || value == 6) TakeDamage("Legs", waitingDamage);
-        GameManager.Instance.combatManager.DoMonsterInstanceActionsRecursively();
+        string part = "";
+
+        if (value == 1)
+        {
+            part = "Head";
+            TakeDamage("Head", waitingDamage);
+        }
+        if (value == 2)
+        {
+            part = "Body";
+            TakeDamage("Body", waitingDamage);
+        }
+        if (value == 3 || value == 4)
+        {
+            part = "Arms";
+            TakeDamage("Arms", waitingDamage);
+        }
+        if (value == 5 || value == 6)
+        {
+            part = "Legs";
+            TakeDamage("Legs", waitingDamage);
+        }
+
+        GameManager.Instance.coroutineHelper.ShowHintText($"Took a hit to the {part}.");
+        GameManager.Instance.diceSystem.HideExplanation();
+
+        GameManager.Instance.combatManager.ProcessTargetsOneByOne();
     }
 
 
     public void RequireAttack()
     {
         if(canAttack && GameManager.Instance.mouseStateManager.allowedToClick)
-            GameManager.Instance.mouseStateManager.RequireAttack(this, attackRange, SelectBodyPart);
+            GameManager.Instance.mouseStateManager.RequireAttack(this, weapon.attackRange, SelectBodyPart);
     }
     public void RequireMove()
     {
@@ -95,23 +115,31 @@ public class Survivor : Unit
         MovePath(path);
     }
 
-    public void MonsterEvadeCheck(int diceValue)
+    public void PlayerAccuracyCheck(int diceValue)
     {
         canAttack = false;
+        // critical
         if (diceValue == 6)
         {
+            GameManager.Instance.coroutineHelper.ResultSuccess(true);
+            GameManager.Instance.diceSystem.RequireAction(StrengthCheck, "Stength check");
             GameManager.Instance.combatManager.monster.GetComponent<Monster>().React(diceValue, aimmingPartition);
-            GameManager.Instance.diceSystem.RequireAction(StrengthCheck);
-            GameManager.Instance.uiManager.UpdateStateText("Strength Check");
         }
         else
         {
-            if (diceValue + dex >= weapon.dexRequirement)
+            if (diceValue + dex >= weapon.dexRequirement && diceValue != 1)
             {
+                GameManager.Instance.coroutineHelper.ResultSuccess(true);
+                GameManager.Instance.diceSystem.RequireAction(StrengthCheck, "Stength check");
                 GameManager.Instance.combatManager.monster.GetComponent<Monster>().React(diceValue, aimmingPartition);
             }
+            //missed
             else
+            {
+                GameManager.Instance.coroutineHelper.ResultSuccess(false);
+                GameManager.Instance.combatManager.monster.GetComponent<Monster>().React(diceValue, aimmingPartition);
                 Debug.Log("Too small");
+            }
         }
     }
 
@@ -119,20 +147,25 @@ public class Survivor : Unit
     {
         if (diceValue == 6)
         {
-
+            GameManager.Instance.coroutineHelper.ResultSuccess(true);
+            GameManager.Instance.combatManager.HurtMonster(aimmingPartition, weapon.attackDamage);
         }
         else
         {
-            if (diceValue + str <= weapon.strOffset)
+            if (diceValue + str + weapon.strOffset >= GameManager.Instance.combatManager.Monster.toughness && diceValue != 1)
             {
-
+                GameManager.Instance.coroutineHelper.ResultSuccess(true);
+                GameManager.Instance.combatManager.HurtMonster(aimmingPartition,weapon.attackDamage);
             }
+            //too weak
             else
-                Debug.Log("too small");
+            {
+                GameManager.Instance.coroutineHelper.ResultSuccess(false);
+                Debug.Log("failed");
+            }
         }
     }
 
-    
     public void DeathCheck()
     {
         
@@ -157,7 +190,7 @@ public class HumanBodyPart
 [System.Serializable]
 public class SurvivorInfo
 {
-    public string name;
+    public string survivorName;
     public int str;
     public int dex;
     public int moveDistance;

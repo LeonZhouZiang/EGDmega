@@ -42,14 +42,14 @@ public abstract class MonsterAttackEffect : MonoBehaviour, IEffect
 
     public virtual async Task ActionEffect()
     {
-        await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Taking action!");
-        Debug.Log("Effect start");
+        await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Attacking!");
+        Debug.Log("Effect start"); 
         if (targets.Count != 0 )
             GameManager.Instance.combatManager.SetupHitQueue(targets, damage);
         else
         {
             await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("No target found.");
-            Debug.Log("no available target, next act");
+            Debug.Log(GameManager.Instance.combatManager.isPreActionPhase + " no available target, next act");
             if (GameManager.Instance.combatManager.isPreActionPhase)
                 GameManager.Instance.combatManager.DoActionInQueueRecursively();
             else
@@ -92,9 +92,9 @@ public abstract class MonsterMoveEffect : MonoBehaviour, IEffect
     /// </summary>
     public virtual async Task ActionEffect()
     {
-        await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Taking action!");
         if (pathway.Count != 0)
         {
+            await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("Moving!");
             await GameManager.Instance.combatManager.monster.GetComponent<Unit>().MovePath(pathway);
             Debug.Log("Move done");
             if (GameManager.Instance.combatManager.isPreActionPhase)
@@ -105,7 +105,7 @@ public abstract class MonsterMoveEffect : MonoBehaviour, IEffect
         }
         else
         {
-            await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("No target found.");
+            await GameManager.Instance.combatManager.monster.GetComponent<Monster>().ShowStateText("...");
             Debug.Log("no available target, next act");
             if (GameManager.Instance.combatManager.isPreActionPhase)
                 GameManager.Instance.combatManager.DoActionInQueueRecursively();

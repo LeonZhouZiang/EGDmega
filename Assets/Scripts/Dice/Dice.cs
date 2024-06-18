@@ -10,10 +10,11 @@ public class Dice : MonoBehaviour
     public float maxVelocityMagnitude;
     [HideInInspector]
     public int value;
+    public bool isFinished;
 
     private Vector3 velocity;
     private bool inHand = false;
-    private bool stable = false;
+    private bool stable = true;
 
 
     private void SetIgnore()
@@ -36,7 +37,6 @@ public class Dice : MonoBehaviour
         {
             velocity = velocity.normalized * maxVelocityMagnitude;
         }
-        Vector3 newVelocity = velocity;
         rb.velocity = velocity;
         rb.useGravity = true;
 
@@ -50,7 +50,7 @@ public class Dice : MonoBehaviour
 
     void Update()
     {
-        if (stable) 
+        if (stable && !isFinished && !inHand) 
         {
             Ray ray = diceCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
@@ -63,7 +63,7 @@ public class Dice : MonoBehaviour
             }
         }
 
-        if (inHand)
+        if (inHand && !isFinished)
         {
             Ray ray = diceCamera.ScreenPointToRay(Input.mousePosition);
             if(Physics.Raycast(ray, out RaycastHit hit, 1000, LayerMask.GetMask("Dice")))
@@ -72,11 +72,9 @@ public class Dice : MonoBehaviour
                 velocity = (position - transform.position) / Time.deltaTime;
                 transform.position = position;
             }
-            
 
-            if (Input.GetMouseButtonUp(0) && rb.velocity.magnitude + rb.angularVelocity.magnitude >= 5)
+            if (Input.GetMouseButtonUp(0) && velocity.magnitude >= 4)
             {
-                Debug.Log(rb.velocity.magnitude + rb.angularVelocity.magnitude);
                 inHand = false;
                 stable = false;
                 ResetIgnore();
@@ -93,8 +91,8 @@ public class Dice : MonoBehaviour
             if(!stable && rb.velocity.magnitude + rb.angularVelocity.magnitude <= 0.1f)
             {
                 stable = true;
+                isFinished = true;
                 GameManager.Instance.diceSystem.ReceiveValueFromDice(value);
-                
             }
         }
     }
